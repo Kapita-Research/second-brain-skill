@@ -35,7 +35,6 @@ ENTRIES = [
     ("kapita-vault-KAPITA.md", "replace-file",    "{vault}/KAPITA.md"),
     ("dist/CLAUDE.md",        "create-if-missing", "{vault}/CLAUDE.md"),
     ("dist/CHECKLIST.md",     "none",             ""),
-    ("dist/START-HERE.md",    "none",             ""),
     ("tools",                 "none",             ""),
     ("upstream",              "none",             ""),
     ("discarded",             "none",             ""),

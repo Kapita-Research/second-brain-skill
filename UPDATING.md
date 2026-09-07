@@ -135,6 +135,16 @@ different observer; the author is not.*
 ⚠️ **It is still evidence, not proof.** **The last reader before fifteen people receive something is a
 person.**
 
+### A version number is not a push
+
+**Push as often as you like.** *Fixing a tool, a document, a test or an eval changes nothing anybody
+installs*, and the gate does not stop you.
+
+**A number changes when what people install changes** - anything under `skill/`, or the firm's layer.
+⚠️ **And it changes once, not once per push:** bump it when you first touch a distributed file after a
+release, then keep pushing under that number until the work is worth sending. **Test 7 asks only that a
+released tag keeps meaning one thing.**
+
 ### A release is for something worth receiving, not for every change
 
 ⚠️ **Every release costs fifteen people a notification and a decision.** *Three releases in an hour for

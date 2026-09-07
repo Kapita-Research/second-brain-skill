@@ -1,61 +1,82 @@
-# personal-skill
+# The second brain skill
 
-**A fork of the `obsidian-second-brain` skill v2.17.0, adapted for Arabic capture, research figures, and
-handing part of a vault to an organisation.**
+**A fork of the public `obsidian-second-brain` skill, adapted for research figures, Arabic capture, and
+handing part of a vault to an organisation.** Built on upstream **2.17.0**; this repository is at
+**3.3**.
 
-**This file is orientation only.** Each thing below explains itself.
+> ## Start here
+>
+> **If you were sent this link and told to set it up, say this to Claude:**
+>
+> ### *"Read the README at this repository and do what it says."*
+>
+> **Everything below is written for Claude as much as for you.**
 
 ---
 
-## What is here
+## 1. Install it on this machine
+
+```bash
+git clone https://github.com/Kapita-Research/second-brain-skill.git
+cd second-brain-skill
+python tools/install.py
+```
+
+**That is the whole install.** It finds the release, verifies it by hash before unpacking, creates the
+notes folder and scaffolds it, installs the skill and both root files, merges the hooks, and runs the
+install check. **It asks nothing**, because somebody who has not used the thing yet has no basis for
+choosing a folder layout.
+
+**Then do the four things a script cannot.** The installer names them when it finishes and
+[`dist/CHECKLIST.md`](dist/CHECKLIST.md) spells them out: the daily update routine, the index of the
+other skills on this machine, the owner's own person note, and Obsidian.
+
+**If something is wrong afterwards**, in any conversation: *"run the second brain install check"*. Every
+failing line prints the one thing to do about it.
+
+---
+
+## 2. Understand what the fork does
+
+**Read in this order.** It is the difference between using this and being able to maintain it.
 
 | | |
 |---|---|
-| **`skill/`** | **The fork — what gets installed.** Its own `README.md` describes the skill and how to use it |
-| `upstream/` | **The untouched 2.9.2 original.** Kept because a three-way merge needs the base it diverged from. **Never edit it** |
-| **`skill/CHANGELOG.md`** | **The skill's history** — the 3.0 entry is every difference from upstream 2.17.0, in the same form as every release before it |
-| **`FORK-NOTES.md`** | **What lives outside the skill** — the tools, the two vault files, and **what a future re-base must not undo** |
-
-| `kapita-vault-KAPITA.md` | The firm's layer — **goes in the vault as `KAPITA.md`, never in the skill.** Replaced whole on update |
-| **`tools/`** | **`check-kapita-layer.py`** — the layer overrides the skill, so a word that disagrees wins **silently**. **Run before every distribution** · **`sync-vault.py`** — a vault's scaffold does not update itself. **Run after every update**, with `--fix` · **`check-install.py`** — twenty checks on one machine. **The first thing to run when someone says it is not working** |
-| `dist/` | **`START-HERE.md`** — the first file a recipient opens · **`CHECKLIST.md`** — the nine install steps and the command that verifies them · **`CLAUDE.md`** — the owner's starter file, **which nothing ever replaces** |
-| `discarded/` | A from-scratch draft written before the original was found. A record; used for nothing |
+| [`skill/CHANGELOG.md`](skill/CHANGELOG.md) | **From the top down to and including the 3.0 entry.** Every difference from upstream 2.17.0: what was added, what testing found, and why each decision went the way it did |
+| [`UPDATING.md`](UPDATING.md) | **How this repository works.** The working rules, the gate, and how a release reaches fifteen machines |
+| [`FORK-NOTES.md`](FORK-NOTES.md) | **What lives outside the skill**, and what a future rebase on upstream must not undo |
 
 ---
 
-## Installing
+## 3. Work on it
 
-**1 ·** `skill/` → `~/.claude/skills/`
-**2 ·** Any empty folder as a vault
-**3 ·** `kapita-vault-KAPITA.md` → the vault root as `KAPITA.md` · `dist/CLAUDE.md` → beside it as `CLAUDE.md`
-**4 ·** Obsidian is optional and free. **If you install it, turn on Settings → General → Command line
-interface** — the skill checks and says so once.
+**Read [`UPDATING.md`](UPDATING.md) before your first change.** The short version:
 
----
-
-## Distributing
+- **Pull before you push, and read what came in.** Enforced by a hook.
+- **Nothing half finished is pushed.** The gate runs on your machine and again in CI.
+- **Push freely; release rarely.** A version number changes only when what people install changes, and
+  a release is a separate act you ask for.
+- **Machines install a tag, not `main`**, so a commit that turns out to be wrong reaches nobody.
+- **Claude does not push and does not release** unless you say so.
 
 ```bash
-python tools/build-zip.py
+git config core.hooksPath .githooks    # once per clone: installs the pre-push gate
+python tools/test_all.py               # the gate, any time
 ```
 
-**`../second-brain-3.0.zip`** is what goes to a person — **one archive for both cases.** The version
-in its name is read from the skill's own frontmatter, so the two cannot disagree.
+---
 
-It carries the skill, both vault files, `sync-vault.py`, and a `START-HERE.md` that
-branches:
+## What is in here
 
-> **Never used it** → *"Install this skill."* · **Used it before** → *"Update my skill with this."*
+| | |
+|---|---|
+| **`skill/`** | **The fork. This is what gets installed.** Generic and standalone: it names no company and no colleague, and a test enforces that |
+| **`kapita-vault-KAPITA.md`** | **The firm's layer.** Goes in the vault as `KAPITA.md` and is replaced whole on every update. **Never inside the skill** |
+| **`tools/`** | `install.py` and `update.py` install a release; `release.py` cuts one; `test_all.py` is the gate; `manifest.py` writes the file that knows every destination; `check-install.py` verifies one machine |
+| **`MANIFEST.json`** | **The only file that knows where anything goes.** Generated, and the gate refuses a push where it is stale |
+| **`dist/`** | `CHECKLIST.md`, the install runbook, and `CLAUDE.md`, the vault starter file that nothing ever replaces |
+| **`upstream/`** | The untouched originals, kept because a three-way merge needs the base it diverged from. **Never edit** |
 
-**Both branches are written as instructions Claude executes**, so the person does not have to read them.
-
-⛔ **It excludes `evals/`, `upstream/`, `FORK-PLAN.md`, `discarded/` and `check-kapita-layer.py`** —
-development material. **`sync-vault.py` is in**, because an update calls it.
-
-## Status
-
-**Thirty-three documented changes, and the fork now sits on upstream 2.17.0** — eight feature releases
-brought forward, every one of our decisions re-applied on top.
-
-> **The next step is not another change — it is a week of ordinary use.** Every genuinely new problem
-> so far came from **running** something, never from reading it.
+> ## Nothing personal is ever committed here.
+> **No note from anyone's vault, nothing from `Judgements/`, nothing from a personal `CLAUDE.md`.** A
+> person's own record is theirs, and it is not distributed even to help.
