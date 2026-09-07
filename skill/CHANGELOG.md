@@ -2,6 +2,25 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.1.1 — 2026-09-07
+
+**The installer crashed on a machine that had never run Claude Code.** Writing the release-state file
+is the last thing a successful install does, and it writes into `~/.claude` — **which does not exist
+yet on a machine where Claude Code has never started.** So the install did all its work, verified every
+file, and then ended in a traceback.
+
+> ### It was the empty-machine test that was not empty.
+> **Test 5 redirected the skills folder and the vault, and left `HOME` pointing at the maintainer's
+> own.** *So the one directory the installer needed was always already there.* **The test now
+> redirects `HOME` as well, and installs where a real machine would** — and it reproduces the crash
+> when the fix is removed.
+
+**Found by CI on Linux**, where a runner's home is genuinely bare — the same class of gap as the
+scaffold that only crashed off this machine, and the second time in two releases that *the receiving
+end* is where the bug lived.
+
+---
+
 ## 3.1 — 2026-09-07
 
 **One sentence installs the whole thing, and the skill now knows how it is kept current.**

@@ -107,23 +107,31 @@ def t_manifest():
 
 @test("5 - a full install into an empty machine passes its own check")
 def t_install():
-    """Nothing here touches the real ~/.claude: the skills folder and the vault are both temporary."""
+    """An empty machine, and it has to be genuinely empty.
+
+    HOME is redirected as well as the skills folder. Reading the maintainer's own `~/.claude` is how
+    this test passed while the installer crashed on any machine that had never run Claude Code: the
+    config directory it writes its state into did not exist there, and here it always did.
+    """
     with tempfile.TemporaryDirectory() as tmp:
-        skills = os.path.join(tmp, "skills")
         v = os.path.join(tmp, "vault")
-        os.makedirs(skills)
-        os.makedirs(v)
+        home = os.path.join(tmp, "home")
+        for d in (v, home):
+            os.makedirs(d)
+        # No --skills-dir: with HOME redirected the skill lands where it really would, under
+        # <home>/.claude/skills, so the check afterwards is looking at the same place the installer
+        # wrote to rather than at the maintainer's own copy.
+        empty = {"HOME": home, "USERPROFILE": home, "HOMEPATH": home}
         code, out = run([PY, os.path.join(SKILL, "scripts", "bootstrap_vault.py"), v,
-                         "--modules", "core,work,findings"])
+                         "--modules", "core,work,findings"], env=empty)
         if code != 0:
-            return False, "bootstrap failed:\n" + out[-600:]
-        code, out = run([PY, os.path.join(HERE, "update.py"), "--vault", v,
-                         "--skills-dir", skills, "--no-checks"])
+            return False, "bootstrap failed:" + os.linesep + out[-600:]
+        code, out = run([PY, os.path.join(HERE, "update.py"), "--vault", v, "--no-checks"], env=empty)
         if code != 0:
-            return False, "install failed:\n" + out[-900:]
+            return False, "install failed:" + os.linesep + out[-900:]
         if "verified by hash" not in out:
-            return False, "the install did not verify itself:\n" + out[-600:]
-        code, out = run([PY, os.path.join(HERE, "check-install.py"), v])
+            return False, "the install did not verify itself:" + os.linesep + out[-600:]
+        code, out = run([PY, os.path.join(HERE, "check-install.py"), v], env=empty)
         # The person note and the hooks belong to a human, not to a release: their absence in a
         # temporary vault is correct. Anything else required must pass.
         allowed = ("Your own person note", "Automatic capture configured", "and it names the skill",

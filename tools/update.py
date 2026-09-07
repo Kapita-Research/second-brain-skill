@@ -258,6 +258,10 @@ def install(root, vault, skills_dir, run_checks):
         return 1
     print("  verified by hash: %d file(s) match the manifest" % len(man["files"]))
 
+    # ~/.claude does not necessarily exist: a machine that has never run Claude Code, and every CI
+    # runner. Writing the state file is the last step of a successful install, so its absence turned
+    # a finished install into a traceback.
+    os.makedirs(CLAUDE_DIR, exist_ok=True)
     with io.open(STATE, "w", encoding="utf-8") as fh:
         json.dump({"release": release, "from": root}, fh, indent=1)
     if os.path.exists(NOTICE):
@@ -317,6 +321,7 @@ def main():
             return 0
         print("installed %s - newest release %s" % (have or "unknown", release))
         if have and release != have:
+            os.makedirs(CLAUDE_DIR, exist_ok=True)
             with io.open(NOTICE, "w", encoding="utf-8") as fh:
                 json.dump({"release": release, "installed": have,
                            "archive": archive if archive != "PARTIAL" else None}, fh, indent=1)
