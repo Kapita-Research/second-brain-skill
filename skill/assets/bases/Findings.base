@@ -1,0 +1,68 @@
+properties:
+  measure:
+    displayName: Measure
+  population:
+    displayName: Population
+  base_n:
+    displayName: "Base (n)"
+  collected:
+    displayName: Fieldwork
+  describes:
+    displayName: Describes
+  caveat:
+    displayName: Caveat
+  basis:
+    displayName: Basis
+views:
+  - type: table
+    name: "Current"
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - 'type == "finding"'
+        - 'status == "current"'
+    order:
+      - file.name
+      - population
+      - base_n
+      - collected
+      - describes
+      - caveat
+  - type: table
+    name: "Drafts — missing a required field, never quoted"
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - 'type == "finding"'
+        - 'status == "draft"'
+    order:
+      - file.name
+      - measure
+      - base_n
+      - caveat
+  - type: table
+    name: "Superseded"
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - 'type == "finding"'
+        - 'status == "superseded"'
+    order:
+      - file.name
+      - describes
+      - superseded_by
+  - type: cards
+    name: "By basis"
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - 'type == "finding"'
+        - 'status != "superseded"'
+    order:
+      - file.name
+      - basis
+      - base_n

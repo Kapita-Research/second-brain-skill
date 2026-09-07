@@ -1,0 +1,25 @@
+name: gate
+
+# The same tests the pre-push hook runs. A hook can be skipped with --no-verify; this cannot.
+# A release tag is only ever put on a commit that is green here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  gate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+      - name: the release gate
+        run: python tools/test_all.py

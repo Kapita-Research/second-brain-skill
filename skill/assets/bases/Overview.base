@@ -1,0 +1,47 @@
+properties:
+  domain:
+    displayName: Domain
+  status:
+    displayName: Status
+views:
+  - type: table
+    name: Active projects
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+            - file.inFolder("Judgements")
+        - type == "project"
+        - status == "active"
+    groupBy:
+      property: domain
+      direction: ASC
+    order:
+      - file.name
+      - due
+      - people
+  - type: table
+    name: Recent meetings
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+            - file.inFolder("Judgements")
+        - type == "meeting"
+    order:
+      - file.name
+      - people
+      - file.ctime
+    limit: 10
+  - type: table
+    name: Recently touched
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+            - file.inFolder("Judgements")
+        - file.ext == "md"
+    order:
+      - file.name
+      - file.mtime
+    limit: 15

@@ -1,0 +1,7 @@
+# Built artefacts. The release is the tag; the archive is rebuilt from it.
+*.zip
+__pycache__/
+*.pyc
+*.bak
+crawl-*/
+survey.json

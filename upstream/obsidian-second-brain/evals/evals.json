@@ -1,0 +1,193 @@
+{
+  "skill_name": "obsidian-second-brain",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My vault is the provided folder mini-vault. I just had my weekly ops meeting — the dictated transcript is in meeting-transcript.txt. Capture it in my vault.",
+      "expected_output": "A meeting note in Work/Meetings/ plus one task note per action item in Tasks/, all correctly linked, with dictated names resolved to existing people notes.",
+      "files": [
+        "evals/files/mini-vault",
+        "evals/files/meeting-transcript.txt"
+      ],
+      "expectations": [
+        "A meeting note is created in Work/Meetings/ with type: meeting, domain, created, and people frontmatter",
+        "Exactly 3 task notes are created in Tasks/, one per action point in the transcript",
+        "Each task note has type: task, status: not-started, and source linking the meeting note",
+        "The task about the proposal carries a due date — the Monday following the meeting (per 'by monday' in the transcript)",
+        "Dictated names are resolved to the existing notes Sarah Chen and Omar Haddad (no new duplicate person notes like 'Sara Chen' or 'Omar Hadad')",
+        "The meeting note's Action items section lists wikilinks to the task notes and contains no unchecked '- [ ]' checkboxes"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "My vault is the provided folder mini-vault. What's on my plate?",
+      "expected_output": "The standard open-task table with overdue flagged and a one-line read.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "Output contains a Markdown table with columns # | Task | Priority | Due | Thread",
+        "The done task (Book venue for offsite) is excluded",
+        "Send Acme proposal appears first (high priority) and its 2026-06-25 due date is flagged as overdue",
+        "After the table there is a one-line summary: total open, high-priority count, nearest deadline, busiest thread",
+        "No new files are created in the vault by this request"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My vault is the provided folder mini-vault. Met Lina Farouk today — she runs procurement at Nordic Foods, email lina@nordicfoods.example, phone +45 5555 1234. She helped us jump the vendor queue last spring, so we owe her one; she's sensitive about delivery-date promises. Add her to my vault.",
+      "expected_output": "One person note capturing identity, contact details, and relationship history/considerations, linked into the vault.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "A single new note People/Lina Farouk.md is created (search-before-create: no duplicate)",
+        "Frontmatter has type: person, domain: work, created, and captures email and phone as structured properties",
+        "Her company/role (procurement at Nordic Foods) is recorded",
+        "The favor owed (vendor-queue help) and the sensitivity (delivery-date promises) are recorded in a relationship/considerations section",
+        "The note links to at least one other note or MOC (not orphaned)"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "My vault is the provided folder mini-vault. Create a team called 'Ops Team' with Sarah Chen and Omar Haddad as members, so I can ask things like 'who is on the ops team and what is each person working on' later.",
+      "expected_output": "A queryable group/roster representation linking the two person notes.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "A group/roster note (or equivalent queryable structure) is created that lists Sarah Chen and Omar Haddad as members via wikilinks",
+        "The two person notes are updated to reference the team (frontmatter property or link), enabling roster queries from either direction",
+        "Frontmatter on anything created uses type/domain/created and does not invent undocumented status values",
+        "The mechanism is queryable (a Base view, or frontmatter filterable by Bases), not just prose"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "The provided empty folder is my brand-new vault. Set up a second brain for me. Context: I run a small marketing agency with client projects, and I also coordinate volunteers for a food-bank NGO.",
+      "expected_output": "A guided, minimal, owner-shaped setup with a vault CLAUDE.md — not an unmodified default tree dumped without questions.",
+      "files": [],
+      "expectations": [
+        "Claude asks at least one clarifying question about the owner's work OR explicitly confirms the proposed shape before scaffolding everything",
+        "A CLAUDE.md is created in the vault root recording the structure and conventions chosen",
+        "The structure reflects the owner's stated domains (clients/agency work and volunteers/NGO), not just the unmodified default tree",
+        "A minimal start is respected: no more than ~12 top-level folders, no empty deep hierarchies for unused note types",
+        "A Home MOC (or equivalent front door) is created and links the main areas"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "My vault is the provided folder custom-vault. File this: 'Kickoff notes from today's sync with the Horizon team — we decided to move the launch to October; Omar owns the launch checklist.'",
+      "expected_output": "Filing follows the vault's own CLAUDE.md conventions (custom folder names), not the skill's default tree.",
+      "files": [
+        "evals/files/custom-vault"
+      ],
+      "expectations": [
+        "The vault's CLAUDE.md is read and followed: the meeting note goes to '04 Meetings/' (not Work/Meetings/)",
+        "A task note for Omar's launch checklist is created in '05 Actions/' (not Tasks/) per the vault's conventions",
+        "The task note links its source (the new meeting note) and the person Omar Reyes",
+        "No skill-default folders (Work/, Tasks/, Inbox/) are created in this vault"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "My vault is the provided folder mini-vault. Quick update: I sent the Acme proposal to procurement yesterday, and I've started reviewing the onboarding doc.",
+      "expected_output": "Both task statuses updated in place with dated notes; nothing deleted or archived without asking.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "Tasks/Send Acme proposal.md status changes to done, with a dated completion line added to the note body",
+        "Tasks/Review onboarding doc.md status changes to in-progress",
+        "No task note is deleted, and nothing is moved to Archive/ without explicit confirmation",
+        "The response confirms exactly what changed (both statuses)"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "My vault is the provided folder mini-vault. Create a task: send the weekly ops report every Friday, first one due 2026-07-10. Then log that I just sent this week's report.",
+      "expected_output": "A recurring task whose completion advances the due date instead of closing the task.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "A task note is created with type: task, recurrence: weekly, and due: 2026-07-10",
+        "After the report is logged as sent, the task is NOT left at status done with no next occurrence: either due advances to 2026-07-17 with a dated completion line in the body (default), or a dated per-occurrence copy is created and marked done",
+        "The recurring task is not deleted"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "My vault is the provided folder mini-vault. New: we're pitching Nordic Foods a cold-chain monitoring pilot — I own it, roughly 30k USD, and we've had one discovery call so far. File this properly.",
+      "expected_output": "An organization note for Nordic Foods plus a deal-named engagement note at an early stage, linked both ways.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "An organization note (type: business) is created for Nordic Foods as the entity",
+        "A separate engagement note (type: engagement) is created, named after the deal (e.g. cold-chain pilot), not just the company",
+        "The engagement's org property links the Nordic Foods note, and its status is an early stage from the controlled set (lead or talking) — not an invented value",
+        "value (~30k USD) and owner are recorded on the engagement",
+        "The org note references the engagement (Engagements section or link)"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "My vault is the provided folder mini-vault. Draft a short follow-up email to Sarah Chen about the Acme proposal — I sent it to her yesterday and I'm waiting on procurement's reaction.",
+      "expected_output": "A short, plain follow-up email consistent with her noted preferences, with vault upkeep (task status closed per Rule 8).",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "An email draft (subject + body) is produced, short and plain — consistent with the preference recorded in her note",
+        "The Relationship & considerations content is not quoted, mentioned, or paraphrased inside the email text",
+        "The email reflects that the proposal was already sent and asks about procurement's next step",
+        "Claude updates (or explicitly offers to update) Tasks/Send Acme proposal.md to done, since the user said it was sent",
+        "No personal-domain content appears in the draft"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "I just installed this skill and I have an empty folder ready for a vault. What can this thing actually do, and how do I start?",
+      "expected_output": "A brief, concrete explanation plus an offer to run the onboarding interview — no vault created without asking.",
+      "expectations": [
+        "The reply explains the system briefly and concretely (capture, tasks, people, meetings, retrieval) without dumping the full reference docs",
+        "It offers to start with the onboarding interview (a few questions about the user's work) rather than scaffolding immediately",
+        "It gives 2-4 example phrases the user could say (e.g. meeting capture, what's on my plate)",
+        "No files or folders are created before the user answers or explicitly agrees"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "My vault is the provided folder mini-vault. Money update for our org 'Bright Futures' (I'm holding their donation money): 10 donations came in totalling 10,000 USD — 3 of them (1,000 each from Sarah Chen, Omar Haddad, and Lina Farouk) are for the Q3 Launch initiative; 5 (800 each, from Dana Kim, Tariq Aziz, Noor Salem, Ravi Menon, and one anonymous donor) are for the Winter Relief project; 2 (1,500 each from Omar Haddad and Sarah Chen) are general purpose. Then: I spent 3,000 from the Q3 Launch money... actually make that from the general fund on Q3 Launch costs. And I sent 5,000 to William Carter — he'll use it and return it. Set all of this up and tell me exactly where the money stands.",
+      "expected_output": "A fund owned by Bright Futures, 10 donation transactions with correct earmarks (one anonymous), an expense, an outstanding transfer, and a correct restated position: 2,000 cash, 5,000 receivable owed by William to Bright Futures.",
+      "files": [
+        "evals/files/mini-vault"
+      ],
+      "expectations": [
+        "A fund note (type: fund) is created with owner linking a Bright Futures org note (created as type: business), and the user as custodian",
+        "Exactly 10 transaction notes with direction in / status settled / txn donation; 3 earmarked to Q3 Launch, 5 to a Winter Relief initiative, 2 general — amounts matching (3x1000, 5x800, 2x1500)",
+        "The anonymous donation has no counterparty property and notes the anonymity in the body; named donors are linked (existing people resolved, new ones created once each)",
+        "The 3,000 expense is one transaction (out/settled/expense) earmarked per the user's correction (general fund, spent on Q3 Launch costs)",
+        "The William Carter transfer is out/outstanding/transfer — and the reply states William owes Bright Futures (the fund's owner), not the user personally",
+        "The final stated position is computed, correct, and explicit: 2,000 cash, 5,000 receivables, 0 pledges (10,000 in − 3,000 expense − 5,000 transfer)",
+        "No balances are silently invented; the math is shown or clearly derivable from the created notes"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "My vault is the provided folder money-vault. Two money updates for the Relief Pot: William Carter repaid 3,000 of the 5,000 he owes; and Dana Kim's 1,000 pledge isn't happening — write it off. Where does the Relief Pot stand now?",
+      "expected_output": "Partial repayment handled by the split rule; pledge written off as cancelled; correct restated position: 8,000 cash, 2,000 receivable, 0 pledges.",
+      "files": [
+        "evals/files/money-vault"
+      ],
+      "expectations": [
+        "A repayment transaction is created: in / settled / 3,000 / txn repayment, related-linked to the William transfer, inheriting fund and currency",
+        "The original transfer is SPLIT per money.md: an out+settled portion of 3,000 exists and the outstanding remainder is exactly 2,000 — total recorded outflow to William remains 5,000 (history not shrunk)",
+        "Dana Kim's pledge is set to status cancelled with a dated note — not deleted, and not counted in any balance",
+        "The restated position is computed and correct: 8,000 cash, 2,000 receivables (William owes Bright Futures), 0 pledges",
+        "Summing the transaction notes' signed amounts (excluding cancelled) reproduces the stated cash figure — no silent discrepancy"
+      ]
+    }
+  ]
+}

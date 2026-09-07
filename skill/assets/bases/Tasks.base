@@ -1,0 +1,110 @@
+formulas:
+  days_left: 'if(due, (date(due) - today()).days, "")'
+properties:
+  status:
+    displayName: Status
+  priority:
+    displayName: Priority
+  due:
+    displayName: Due
+  due_time:
+    displayName: Time
+  formula.days_left:
+    displayName: Days Left
+  projects:
+    displayName: Projects
+  people:
+    displayName: People
+  assignee:
+    displayName: Assignee
+views:
+  - type: table
+    name: Open — by status
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "task"
+        - status != "done"
+        - status != "cancelled"
+        - status != "delegated-out"
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - file.name
+      - priority
+      - due
+      - due_time
+      - formula.days_left
+      - projects
+      - people
+      - assignee
+  - type: table
+    name: By assignee
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "task"
+        - status != "done"
+        - status != "cancelled"
+        - status != "delegated-out"
+    groupBy:
+      property: assignee
+      direction: ASC
+    order:
+      - file.name
+      - priority
+      - due
+      - due_time
+      - formula.days_left
+      - projects
+      - people
+  - type: table
+    name: Overdue
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "task"
+        - status != "done"
+        - status != "cancelled"
+        - status != "delegated-out"
+        - due < today()
+    order:
+      - due
+      - file.name
+      - priority
+      - projects
+      - people
+      - assignee
+  - type: table
+    name: Done & cancelled
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "task"
+        - or:
+            - status == "done"
+            - status == "cancelled"
+    order:
+      - file.name
+      - status
+      - assignee
+      - file.mtime
+  - type: table
+    name: "Delegated out"
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "task"
+        - status == "delegated-out"
+    order:
+      - file.name
+      - assignee
+      - projects
+      - due
+      - file.mtime

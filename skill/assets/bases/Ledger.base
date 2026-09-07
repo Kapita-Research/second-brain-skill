@@ -1,0 +1,108 @@
+formulas:
+  signed: 'if(status == "cancelled", "", if(amount, if(direction == "in", amount, 0 - amount), ""))'
+properties:
+  formula.signed:
+    displayName: "±Amount"
+  amount:
+    displayName: Amount
+  currency:
+    displayName: Cur
+  txn:
+    displayName: Kind
+  counterparty:
+    displayName: Counterparty
+  fund:
+    displayName: Fund
+  initiative:
+    displayName: Initiative
+  status:
+    displayName: Status
+views:
+  - type: table
+    name: All transactions
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "transaction"
+    order:
+      - file.name
+      - txn
+      - formula.signed
+      - currency
+      - counterparty
+      - fund
+      - initiative
+      - status
+  - type: table
+    name: Receivables (owed to us)
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "transaction"
+        - status == "outstanding"
+        - direction == "out"
+    order:
+      - file.name
+      - amount
+      - currency
+      - counterparty
+      - fund
+    summaries:
+      amount: Sum
+  - type: table
+    name: Pledges (promised in)
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "transaction"
+        - status == "outstanding"
+        - direction == "in"
+    order:
+      - file.name
+      - amount
+      - currency
+      - counterparty
+      - fund
+    summaries:
+      amount: Sum
+  - type: table
+    name: By fund
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "transaction"
+        - status != "cancelled"
+    groupBy:
+      property: fund
+      direction: ASC
+    order:
+      - file.name
+      - formula.signed
+      - currency
+      - txn
+      - status
+    summaries:
+      formula.signed: Sum
+  - type: table
+    name: By initiative
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "transaction"
+        - status != "cancelled"
+    groupBy:
+      property: initiative
+      direction: ASC
+    order:
+      - file.name
+      - formula.signed
+      - currency
+      - txn
+      - counterparty
+    summaries:
+      formula.signed: Sum

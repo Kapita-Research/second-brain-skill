@@ -1,0 +1,50 @@
+properties:
+  job_title:
+    displayName: Title
+  department:
+    displayName: Department
+  company:
+    displayName: Company
+  email:
+    displayName: Email
+  phone:
+    displayName: Phone
+  last-contact:
+    displayName: Last contact
+  members:
+    displayName: Members
+views:
+  - type: table
+    name: Directory
+    filters:
+      and:
+        - type == "person"
+    order:
+      - file.name
+      - job_title
+      - department
+      - company
+      - email
+      - phone
+      - last-contact
+  - type: table
+    name: By department
+    filters:
+      and:
+        - type == "person"
+    groupBy:
+      property: department
+      direction: ASC
+    order:
+      - file.name
+      - job_title
+      - last-contact
+  - type: table
+    name: Groups
+    filters:
+      and:
+        - type == "group"
+    order:
+      - file.name
+      - members
+      - file.mtime

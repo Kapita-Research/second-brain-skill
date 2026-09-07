@@ -1,0 +1,39 @@
+#!/bin/sh
+# Refuse a push that would land on top of work you have not seen, or that fails the gate.
+#
+# Installed by:  git config core.hooksPath .githooks
+# The hook lives in the repository, so everybody who clones gets the same one.
+#
+# It can be skipped with --no-verify. That is why the same tests run again in CI, where they
+# cannot be skipped, and why machines install a TAG rather than main.
+set -e
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+echo "pre-push: fetching, to see if anything landed while you were working..."
+if git fetch --quiet origin 2>/dev/null; then
+  if git rev-parse --verify --quiet "origin/$BRANCH" >/dev/null; then
+    BEHIND=$(git rev-list --count "HEAD..origin/$BRANCH")
+    if [ "$BEHIND" -gt 0 ]; then
+      echo ""
+      echo "REFUSED - $BEHIND commit(s) are on origin/$BRANCH that you do not have."
+      echo ""
+      echo "  git pull --rebase"
+      echo ""
+      echo "Then read what came in before you push. Two people edit this repository, and the"
+      echo "layer file overrides the skill silently, so a clean text merge is not proof of agreement."
+      exit 1
+    fi
+  fi
+else
+  echo "pre-push: could not reach origin. Running the gate anyway."
+fi
+
+echo "pre-push: running the release gate..."
+python tools/test_all.py || {
+  echo ""
+  echo "REFUSED - the gate failed. Nothing half-finished goes to a machine that is not yours."
+  exit 1
+}
+
+echo "pre-push: clean."

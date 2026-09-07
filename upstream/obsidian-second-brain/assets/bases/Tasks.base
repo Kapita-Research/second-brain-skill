@@ -1,0 +1,85 @@
+formulas:
+  days_left: 'if(due, (date(due) - today()).days, "")'
+properties:
+  status:
+    displayName: Status
+  priority:
+    displayName: Priority
+  due:
+    displayName: Due
+  due_time:
+    displayName: Time
+  formula.days_left:
+    displayName: Days Left
+  projects:
+    displayName: Projects
+  people:
+    displayName: People
+  assignee:
+    displayName: Assignee
+views:
+  - type: table
+    name: Open — by status
+    filters:
+      and:
+        - type == "task"
+        - status != "done"
+        - status != "cancelled"
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - file.name
+      - priority
+      - due
+      - due_time
+      - formula.days_left
+      - projects
+      - people
+      - assignee
+  - type: table
+    name: By assignee
+    filters:
+      and:
+        - type == "task"
+        - status != "done"
+        - status != "cancelled"
+    groupBy:
+      property: assignee
+      direction: ASC
+    order:
+      - file.name
+      - priority
+      - due
+      - due_time
+      - formula.days_left
+      - projects
+      - people
+  - type: table
+    name: Overdue
+    filters:
+      and:
+        - type == "task"
+        - status != "done"
+        - status != "cancelled"
+        - due < today()
+    order:
+      - due
+      - file.name
+      - priority
+      - projects
+      - people
+      - assignee
+  - type: table
+    name: Done & cancelled
+    filters:
+      and:
+        - type == "task"
+        - or:
+            - status == "done"
+            - status == "cancelled"
+    order:
+      - file.name
+      - status
+      - assignee
+      - file.mtime

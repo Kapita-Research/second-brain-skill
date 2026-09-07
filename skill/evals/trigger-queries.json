@@ -1,0 +1,32 @@
+{
+  "skill_name": "obsidian-second-brain",
+  "should_trigger": [
+    "file this note in my vault",
+    "process my obsidian inbox",
+    "add the action points from my meeting to my second brain",
+    "create today's daily note",
+    "what do I know about Acme? check my notes",
+    "build a .base dashboard for my open tasks",
+    "fix the layout of my canvas file",
+    "what did I tell Sarah I'd do? check my vault",
+    "help me organize my notes into a PKM system",
+    "set up an obsidian vault as a second brain",
+    "what did I work on in the last 3 weeks? check my second brain",
+    "help me prep my self-appraisal from my vault notes",
+    "set up version history for my obsidian vault",
+    "I deleted a paragraph from a note last week, can I get it back?"
+  ],
+  "should_not_trigger": [
+    "summarize this meeting transcript into an email for my boss",
+    "write markdown documentation for my code repository",
+    "create a kanban board in Notion",
+    "what note should I leave for my landlord about the leak",
+    "help me organize my Downloads folder",
+    "canvas painting tutorial for beginners",
+    "take notes on this PDF and give me bullet points",
+    "review my tasks in Jira and plan the sprint",
+    "draft meeting minutes as a Word document",
+    "capture a screenshot of this webpage"
+  ],
+  "note": "Near-misses on purpose: bare 'note'/'notes'/'canvas'/'capture'/'tasks' without vault/Obsidian/PKM context must NOT fire."
+}

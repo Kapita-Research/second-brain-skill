@@ -1,0 +1,45 @@
+properties:
+  status:
+    displayName: Stage
+  org:
+    displayName: Org
+  value:
+    displayName: Value
+  owner:
+    displayName: Owner
+views:
+  - type: table
+    name: Pipeline — by stage
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "engagement"
+        - status != "done"
+        - status != "lost"
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - file.name
+      - org
+      - value
+      - owner
+      - people
+      - file.mtime
+  - type: table
+    name: Won & lost
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+        - type == "engagement"
+        - or:
+            - status == "done"
+            - status == "lost"
+    order:
+      - file.name
+      - org
+      - value
+      - status
+      - file.mtime

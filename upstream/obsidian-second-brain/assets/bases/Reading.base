@@ -1,0 +1,46 @@
+properties:
+  author:
+    displayName: Author
+  status:
+    displayName: Status
+  rating:
+    displayName: Rating
+  created:
+    displayName: Added
+views:
+  - type: table
+    name: "Reading now"
+    filters:
+      and:
+        - or:
+            - 'type == "book"'
+            - 'type == "source"'
+        - 'status == "reading"'
+    order:
+      - file.name
+      - author
+      - status
+  - type: table
+    name: "To read"
+    filters:
+      and:
+        - or:
+            - 'type == "book"'
+            - 'type == "source"'
+        - 'status == "to-read"'
+    order:
+      - file.name
+      - author
+      - created
+  - type: table
+    name: "Finished"
+    filters:
+      and:
+        - 'status == "done"'
+        - or:
+            - 'type == "book"'
+            - 'type == "source"'
+    order:
+      - file.name
+      - author
+      - rating
