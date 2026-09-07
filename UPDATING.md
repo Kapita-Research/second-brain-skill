@@ -78,13 +78,36 @@ python tools/test_all.py
 ## Setting up your clone, once
 
 ```bash
-git clone <repo> && cd <repo>
+git clone https://github.com/Kapita-Research/second-brain-skill.git
+cd second-brain-skill
 git config core.hooksPath .githooks
 python tools/test_all.py
 ```
 
-**The second line is what installs the pre-push hook.** Without it nothing stops you pushing a broken
+**The third line is what installs the pre-push hook.** Without it nothing stops you pushing a broken
 release; the Action will still catch it, but after the fact.
+
+### And let Claude run git without asking you every time
+
+**Add this to `~/.claude/settings.json`, merged into any `permissions.allow` already there:**
+
+```json
+"permissions": {
+  "allow": [
+    "Bash(git status *)", "Bash(git log *)", "Bash(git diff *)",
+    "Bash(git add *)", "Bash(git commit *)", "Bash(git checkout *)",
+    "Bash(git fetch *)", "Bash(git ls-remote *)", "Bash(git pull *)",
+    "Bash(git push *)", "Bash(git remote *)", "Bash(git tag *)"
+  ]
+}
+```
+
+> ⛔ **You have to paste this yourself, and that is deliberate.** *Claude is not permitted to widen its
+> own permissions* - the request is refused whichever way it is attempted, which is the correct
+> behaviour and not a bug to route around. **It is one paste, once per machine.**
+
+**Specific verbs rather than `Bash(git *)`**, so a force-push or a hard reset still stops and asks.
+⚠️ **Nobody outside this repository needs any of it** - the team's update path never touches git.
 
 ---
 
