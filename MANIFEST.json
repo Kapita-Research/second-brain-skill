@@ -1,6 +1,6 @@
 {
  "release": "3.0",
- "generated": "2026-09-07T12:35:18",
+ "generated": "2026-09-07T12:37:31",
  "entries": [
   {
    "source": "skill",
@@ -81,9 +81,15 @@
    "source": ".gitignore",
    "rule": "none",
    "dest": ""
+  },
+  {
+   "source": ".gitattributes",
+   "rule": "none",
+   "dest": ""
   }
  ],
  "files": {
+  ".gitattributes": "7ee7eaa36fc65048e93a3ae1f5231362e3a7154f620f0fdbe0912c27a75d9dd2",
   ".gitignore": "d5dee9c90ab6f93f5dc8e808e21dc9d3cc657c7f100b5ca555ad0d0307a0c57b",
   "FORK-NOTES.md": "1409f6aad6546af75ee3e7a5d7b5a6fc1089f3bfc5b52b4059e5d67f54b72446",
   "FORK-PLAN.md": "7eafafa2facac124d6df09a7cfd03bb1247d00090fbfecab58a0cc3f578869cc",
@@ -93,7 +99,7 @@
   ".githooks/pre-push": "a881dcb2daa0bfd030d4b3c6132008fdca7abd90a0787acbe561145889f575b8",
   ".github/workflows/ci.yml": "50dd2bb91ceb0806b6a2bb283424290f5fe76aedb74f10b711656c4c6157f052",
   "discarded/SKILL-draft-discarded.md": "6cea198cb8c59a29d2ba7cd114616d15ab4eec38dc17c128f091374877936f08",
-  "dist/CHECKLIST.md": "c9fc38603c9fc83c0bed909e490518c6f2b72bd96c34c7fac27dfcddf6496191",
+  "dist/CHECKLIST.md": "c1964b01aeb8785f96520eb928107ecb505ac0e9d3ccccfe0647d024d50d478c",
   "dist/CLAUDE.md": "72b8211b9680fb0c6fe807c147d07c8215dbaaf82728756d2c2c0bb03d6eda6a",
   "dist/START-HERE.md": "5cae422fc25701139083eb02ecae02214d9e62f8fd16638e34bfd0c42fada90b",
   "skill/CHANGELOG.md": "f9a358856dabf7774232b3197b0d775e0da6d1a2a8670eac59238fa3ce1f0ce0",
@@ -193,9 +199,9 @@
   "skill/scripts/sync_last_contact.py": "38aab790384255c0a12d88a55e85e17fe0d98a82513d64e9d305b35de4dce41e",
   "skill/scripts/validate_vault.py": "58447119097e928b122413e52ed02df8c26587dbb84c1feab94135edaf7b35fa",
   "tools/build-zip.py": "84a84c944ce37e721f4cfe4b71ba7a2479eb8dc235e9a3fb64ff5b434f2350e4",
-  "tools/check-install.py": "9941c654a8983eef06aace91fdafb2ee6de3d2770cfb04e12dce3f5ef862db84",
+  "tools/check-install.py": "4f32eacb52c6df1831cb1aed2d50d8441d993c861d939d49fb0eeff86ee1d5e2",
   "tools/check-kapita-layer.py": "d06775ee03af2440363540036e39617314bc084f42b8ed124417127e36864195",
-  "tools/manifest.py": "4ceec222c63fa3b77b7fb59325dff39221f1d86a3fab329216fd43d83eef6412",
+  "tools/manifest.py": "a6d50e212b40b5b3559144fdb590f7291316ad9de22895abc7f928c3fbead78d",
   "tools/release.py": "232f5b2737f108d3668bbf86529802213c07b31df2ae8e6e1d8b6793ba34f465",
   "tools/sync-vault.py": "9da093eb271f8f8b30eee8efc770bf3d7b08c4e3a433c371206ab17a00b1dac7",
   "tools/test_all.py": "7b7e51c26412fb6730d3c32ecc474f7612ef7d627a591cee1db1d15ec53f30b8",

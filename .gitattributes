@@ -1,0 +1,6 @@
+# Every file is delivered byte-for-byte, with no line-ending conversion.
+#
+# MANIFEST.json hashes these files, and update.py refuses to install a clone whose hashes do not
+# match. On Windows git's default is to rewrite LF as CRLF on checkout, which changes every hash
+# and would make a perfectly good clone look corrupt. Nothing here is converted.
+* -text

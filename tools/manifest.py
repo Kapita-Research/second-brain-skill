@@ -48,6 +48,7 @@ ENTRIES = [
     (".github",               "none",             ""),
     ("MANIFEST.json",         "none",             ""),
     (".gitignore",            "none",             ""),
+    (".gitattributes",        "none",             ""),
 ]
 
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache"}
