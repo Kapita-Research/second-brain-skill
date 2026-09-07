@@ -322,6 +322,36 @@ later when it is wrong. **The note's job is to say which file to open, and then 
 ⚠️ **Dated on sight, with the refresh procedure written into it**, because an index that does not admit
 it is a snapshot will be trusted past its expiry.
 
+**And the release now has a way of arriving.** *Fifteen vaults reading the same words is only true if
+the words can reach them*, and until now nothing delivered them: the install check could tell you your
+copy of the firm's layer was stale, and then leave you to fix it by hand. **The repository is the
+distribution.**
+
+**`MANIFEST.json` is the only file that knows a destination.** Every path maps to one of four rules -
+mirrored whole, replaced with a `.bak`, written only if absent, or shipped and installed nowhere - and
+`update.py` does exactly what it says and nothing else. ⛔ **An unclaimed file fails the gate**, because
+a reference file added in a release and never given a destination is one that quietly reaches nobody.
+
+**The order the installer works in is the point of it.** *Verify the clone against the manifest before
+touching anything*, so a half-downloaded release never reaches the skill folder; **mirror the tree,
+deleting what the release retired**, because a copy-only update leaves a withdrawn file in place
+looking valid; **then verify what landed, file by file.** *A copy that reported success while silently
+skipping files has happened on this project before.*
+
+🔴 **Nothing installs by itself.** A daily routine asks for the newest tag, says nothing at all when
+there is none, and sends one notification when there is. **The person installs when it suits them** -
+and a second `SessionStart` hook mentions a release only after it has sat unclaimed for three days,
+comparing two numbers already on disk and never touching the network.
+
+**Machines install a tag, not the branch.** *That is what makes a bad release recoverable and a
+half-finished commit harmless*, and it is why the six-test gate exists: **two of the six are written
+from the receiving end**, which is the only place the interesting failures live.
+
+⚠️ **One of them found its own bug immediately.** Git rewrites `LF` as `CRLF` on checkout on Windows by
+default, and the manifest hashes the working tree, **so a perfectly good clone failed verification on
+all 178 files.** `.gitattributes` turns the conversion off; verified by cloning with `autocrlf=true`
+and re-running the gate inside the clone.
+
 **Touched:** `SKILL.md` (`description` rewritten; **Golden Rules 3, 4 and 11 extended in place — never renumbered**; rules 2a and 2b added) · `references/{capture-and-web,cli-and-automation,community-plugins,note-types,onboarding,properties-and-tags,retrieval-and-review,vault-structure}.md` · `assets/types.json` (50 → 59 properties) · `assets/bases/Overview.base` (its one type-less view now excludes `Judgements/` — a title is a leak too) · `scripts/{bootstrap_vault,validate_vault}.py` · `README.md` (the fork's `tools/check-install.py` gained a twenty-fourth line and `dist/CHECKLIST.md` a tenth step, both for the skills index). **Added:** `references/{findings,sharing-and-export}.md` · `assets/bases/Findings.base` · `assets/templates/Finding Template.md` · `scripts/{guard_judgements,crawl,survey,session}.py`. **Removed:** `references/publish-and-sharing.md`. **Evals 19–22** cover the fork's own behaviours on one shared fixture (`files/fork-vault`); 22 in total.
 
 **Tested — by running, on real material rather than fixtures:**

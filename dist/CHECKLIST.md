@@ -173,7 +173,7 @@ write real notes while you answer. **You do not have to prepare anything.**
 python tools/check-install.py
 ```
 
-**Two dozen checks, nothing changed — it only looks.**
+**Twenty-six checks on a fully set-up machine, nothing changed — it only looks.**
 
 **Required failures are marked `!` and listed first** — the skill will not work properly until they are
 done. **Optional ones are marked `-` and never fail the run**; they print what you give up.

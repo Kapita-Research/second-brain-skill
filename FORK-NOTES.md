@@ -17,7 +17,12 @@ future re-base has to know about. **Nothing here is part of the skill.**
 | **`tools/build-zip.py`** | The archive, built rather than assembled. **The version comes from `SKILL.md`'s own frontmatter**, so the name and the contents cannot disagree |
 | **`tools/check-install.py`** | **Two dozen checks on one machine** — skill, vault, both root files, property types, templates, every view's `Templates/` exclusion, Obsidian and its CLI, automatic capture, whether the vault validates, and whether the machine's other installed skills are indexed in it. **The first thing to run when somebody says it is not working**, and each failure prints the one thing to do. Ships in the archive with `dist/CHECKLIST.md` |
 
-**Run the layer checker and the vault sync before every distribution.**
+| **`tools/manifest.py`** | **The only file that knows a destination.** Every path in the repository maps to a rule; an unclaimed one fails the gate |
+| **`tools/update.py`** | Verify the clone, install by the manifest, **verify what landed by hash**, then sync the scaffold and run the check. Retired files are deleted, which a copy-only update cannot do |
+| **`tools/release.py`** | Manifest, clean tree, gate, tag, push. **A tag is the only thing a machine installs** |
+| **`tools/test_all.py`** | The six-test gate. **Tests 1 and 5 are written from the receiving end**, which is where the failures that matter live |
+
+**`release.py` runs all of it. Nothing is distributed by hand.**
 
 > 🔴 **The install check earned itself on its first run.** Against a vault somebody had actually
 > used it reported **94 errors across 47 findings** — `type: finding` and its statuses shipped with a

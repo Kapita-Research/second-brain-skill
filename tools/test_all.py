@@ -129,7 +129,8 @@ def t_install():
         allowed = ("Your own person note", "Automatic capture configured", "and it names the skill",
                    "Standing reminder enforced by hooks", "Installed copy matches this package",
                    "Vault opened in Obsidian", "Obsidian installed", "Obsidian CLI enabled",
-                   "Judgement guard armed", "Installed skills indexed")
+                   "Judgement guard armed", "Installed skills indexed",
+                   "Daily update check scheduled")
         failed = [l.strip() for l in out.splitlines()
                   if l.strip().startswith("[ ]") and not any(a in l for a in allowed)]
         return (not failed), ("install clean" if not failed else "\n".join(failed))
