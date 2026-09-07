@@ -1,6 +1,6 @@
 {
  "release": "3.0",
- "generated": "2026-09-07T12:37:31",
+ "generated": "2026-09-07T12:37:59",
  "entries": [
   {
    "source": "skill",
@@ -98,7 +98,7 @@
   "kapita-vault-KAPITA.md": "3b67ea13f2daad2432933b2aa9a51983db1e18092555fea6dea17b828e18ce01",
   ".githooks/pre-push": "a881dcb2daa0bfd030d4b3c6132008fdca7abd90a0787acbe561145889f575b8",
   ".github/workflows/ci.yml": "50dd2bb91ceb0806b6a2bb283424290f5fe76aedb74f10b711656c4c6157f052",
-  "discarded/SKILL-draft-discarded.md": "6cea198cb8c59a29d2ba7cd114616d15ab4eec38dc17c128f091374877936f08",
+  "discarded/SKILL-draft-discarded.md": "26acde0abf62c4a58edeb7427c8308e00496fb3a193f3f9085837d9877783b50",
   "dist/CHECKLIST.md": "c1964b01aeb8785f96520eb928107ecb505ac0e9d3ccccfe0647d024d50d478c",
   "dist/CLAUDE.md": "72b8211b9680fb0c6fe807c147d07c8215dbaaf82728756d2c2c0bb03d6eda6a",
   "dist/START-HERE.md": "5cae422fc25701139083eb02ecae02214d9e62f8fd16638e34bfd0c42fada90b",
