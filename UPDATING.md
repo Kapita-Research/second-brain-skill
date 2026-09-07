@@ -50,7 +50,7 @@ tag.
 
 ---
 
-## The gate
+## The gate — seven tests
 
 ```bash
 python tools/test_all.py
@@ -64,6 +64,7 @@ python tools/test_all.py
 | **4** | `MANIFEST.json` is current, and every file in the repository is claimed by a rule |
 | **5** | A full install into an empty machine passes its own check |
 | **6** | `SKILL.md`, the CHANGELOG's newest entry and `MANIFEST.json` agree on the version |
+| **7** | **This version is not already released.** A released number has to keep meaning one thing, so a distributed file may not change under a tag that already exists. *Editing the tools, the docs or a test changes nothing anybody installs and is not affected* |
 
 > **Tests 1 and 5 are the ones that matter most, because they are written from the receiving end.**
 > *Everything else here runs on a machine where it already works, which is exactly the machine that

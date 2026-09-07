@@ -1,6 +1,6 @@
 {
  "release": "3.0",
- "generated": "2026-09-07T12:40:05",
+ "generated": "2026-09-07T13:03:54",
  "entries": [
   {
    "source": "skill",
@@ -94,7 +94,7 @@
   "FORK-NOTES.md": "b6f98523525c5352c25014e3453706a233ce13085ee8204b946f01e313d69825",
   "FORK-PLAN.md": "7eafafa2facac124d6df09a7cfd03bb1247d00090fbfecab58a0cc3f578869cc",
   "README.md": "b2d84701b747e83f119d42add0073d29b47f23276482b8e6bfe24f4a8e905a56",
-  "UPDATING.md": "6e84616eaa76d2d1a4bdc12abee6a990db71d199236e5204b5aa1b29fe3463c9",
+  "UPDATING.md": "825c82f0804e3de888fabfaa2c45d90e13b3f3c8f667584b7513165d83eca4eb",
   "kapita-vault-KAPITA.md": "3b67ea13f2daad2432933b2aa9a51983db1e18092555fea6dea17b828e18ce01",
   ".githooks/pre-push": "a881dcb2daa0bfd030d4b3c6132008fdca7abd90a0787acbe561145889f575b8",
   ".github/workflows/ci.yml": "50dd2bb91ceb0806b6a2bb283424290f5fe76aedb74f10b711656c4c6157f052",
@@ -204,7 +204,7 @@
   "tools/manifest.py": "a6d50e212b40b5b3559144fdb590f7291316ad9de22895abc7f928c3fbead78d",
   "tools/release.py": "232f5b2737f108d3668bbf86529802213c07b31df2ae8e6e1d8b6793ba34f465",
   "tools/sync-vault.py": "9da093eb271f8f8b30eee8efc770bf3d7b08c4e3a433c371206ab17a00b1dac7",
-  "tools/test_all.py": "0501a12a41f0293387f9a8bc6a60089faa2138e1550539c8e3c25211c4abb33c",
+  "tools/test_all.py": "4c1cbab60bbf3894b428078c465efcd778eeb1d6fed6280f0cca665a23a70101",
   "tools/update.py": "9730bfa7aff55038eac2b5be4c7fb23faf6a4a4523bbef3f735beae250d5d69c",
   "upstream/obsidian-second-brain/CHANGELOG.md": "09f57c4133913a24f23acc6a6c53933b16b6f63f4fcc8fa641fe2749539f702f",
   "upstream/obsidian-second-brain/README.md": "ffc531a49a85e4527c739069018c30769bd28d0ec8762c4b20152dfde24ac490",

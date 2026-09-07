@@ -155,6 +155,42 @@ def t_version():
     return True, "%s everywhere" % v
 
 
+@test("7 - this version has not already been released")
+def t_not_released():
+    """Refuse to change what a released version contains.
+
+    **A tag is what fifteen machines install, so a released number has to keep meaning one thing.**
+    This does not ask you to bump the version on every push - editing the tools, the docs or a test
+    changes nothing anybody installs. It fails only when a file that **is** distributed differs from
+    what the tag of the same number already carries. *Then the choice is a new version, not a quieter
+    tag.*
+
+    Skipped when there is no remote or no network: it is a check about what other people have, and
+    with no remote nobody has anything yet.
+    """
+    man = json.load(io.open(os.path.join(ROOT, "MANIFEST.json"), encoding="utf-8"))
+    v = man["release"]
+    tag = "v" + v
+    code, out = run(["git", "-C", ROOT, "remote"])
+    if code != 0 or not out.strip():
+        return True, "no remote yet - nothing is released, so nothing can be overwritten"
+    code, _ = run(["git", "-C", ROOT, "fetch", "--tags", "--quiet"])
+    if code != 0:
+        return True, "could not reach the remote - skipped"
+    code, out = run(["git", "-C", ROOT, "rev-parse", "--verify", "--quiet", tag + "^{commit}"])
+    if code != 0 or not out.strip():
+        return True, "%s is not released yet" % tag
+    paths = [e["source"] for e in man["entries"] if e["rule"] != "none"]
+    code, out = run(["git", "-C", ROOT, "diff", "--name-only", tag, "HEAD", "--"] + paths)
+    changed = [l for l in out.splitlines() if l.strip()]
+    if changed:
+        listed = os.linesep.join("  " + c for c in changed[:10])
+        return False, ("%s is already released and these distributed files differ from it:%s%s%s"
+                       "Bump metadata.version in SKILL.md and add its CHANGELOG entry."
+                       % (tag, os.linesep, listed, os.linesep))
+    return True, "%s released, and nothing distributed has changed since" % tag
+
+
 def extra_types(claude_md):
     """A vault may register its own type and status names; the validator has to be told."""
     out = []
