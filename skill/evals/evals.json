@@ -306,7 +306,7 @@
         "No permission, migration or setup step gates the use of the new type. Registering the new vocabulary in the vault's CLAUDE.md (extra-types, extra-statuses) is required by this skill and does not count against this: it is a consequence of writing the type, done silently and without asking. What fails is a template or a dashboard built before a single note of the new type has been written",
         "A new property is allowed when it carries a meaning no declared property carries. What fails is a new name that stands in for an existing one instead of adding to it: a note that records who was there in `attendees` and leaves `people` empty disappears from every search for a person. Declared names (date, people, created, domain, type, location) are used where they fit",
         "No new value is added to domain or status",
-        "If a template or a base is offered, it is offered — not required before the type can be used"
+        "A template or a base may be offered, but it is not the first thing produced and it is not most of the answer. The reply starts with use: the first note, or one request for the material that makes one. A reply whose opening is a field table and whose closing is a request for data has taught the owner that this is a thing you set up before you can use it"
       ]
     },
     {
