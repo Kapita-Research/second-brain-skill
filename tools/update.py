@@ -1,24 +1,32 @@
 #!/usr/bin/env python3
-"""Install a release onto this machine, from a clone of the repository.
+"""Install a release onto this machine.
 
-    python tools/update.py                  # install what is in this clone
-    python tools/update.py --pull           # fetch, move to the newest release tag, then install
-    python tools/update.py --check          # say whether a newer release exists. Changes nothing
+    python tools/update.py --check          # is there a newer one? Changes nothing
+    python tools/update.py                  # install the newest release this machine can reach
+    python tools/update.py --from-zip PATH  # install a release archive downloaded by hand
     python tools/update.py --vault "<path>" # when the vault cannot be found automatically
 
-**Nothing is guessed.** `MANIFEST.json` says where each file goes and how it is written, and this
-script does only what the manifest tells it.
+## Where a release comes from, in order
+
+1. **The shared Drive folder**, if Google Drive for desktop is running. It holds `latest.json` and the
+   archive it names, and reading it costs one file read and no network at all.
+2. **This clone**, for the two people who work on the repository.
+3. **A file the owner downloaded from Drive in a browser** - `--from-zip`. The fallback for a machine
+   with no Drive app on it, and it needs no account, no token and no repository.
+
+**Nothing is guessed.** `MANIFEST.json` says where each file goes and how it is written; this script
+does only what the manifest says.
 
 ## The order, and why it is this order
 
-1. **Verify the clone against the manifest first.** A half-downloaded release must never reach the
+1. **Verify the source against its own manifest first.** A half-downloaded release must never reach the
    skill folder - if one hash is wrong, nothing at all is touched.
-2. **Install**: the skill tree is mirrored **and files retired in this release are deleted**; the
-   firm's layer is replaced with the previous copy kept as `.bak`; the owner's own files are written
-   only if they are missing.
+2. **Install**: the skill tree is mirrored **and files retired in this release are deleted**; the firm's
+   layer is replaced with the previous copy kept as `.bak`; the owner's own files are written only if
+   they are missing.
 3. **Verify what landed**, by hash, file by file. A copy that reports success while silently skipping
    files has happened on this project before.
-4. **Run the vault scaffold sync** - additive only, it overwrites nothing - then the install check.
+4. **Sync the vault scaffold** - additive only, it overwrites nothing - then run the install check.
 
 A skill replaced while a conversation is open is not re-read by that conversation. It takes effect in
 the next one. The update itself takes seconds; nothing is unavailable in between.
@@ -32,13 +40,21 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
+import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-ROOT = os.path.dirname(HERE)
+REPO = os.path.dirname(HERE)
 HOME = os.path.expanduser("~")
 CLAUDE_DIR = os.path.join(HOME, ".claude")
 SKILLS = os.path.join(CLAUDE_DIR, "skills")
 STATE = os.path.join(CLAUDE_DIR, "second-brain-release.json")
+NOTICE = os.path.join(CLAUDE_DIR, "second-brain-update.json")
+CONFIG = os.path.join(CLAUDE_DIR, "second-brain-source.json")
+
+# Where Google Drive for desktop puts a shared folder, per platform. The folder name is the
+# firm's; the rest is the app's own layout.
+FOLDER = "KAPITA Second Brain"
 
 
 def sha(path):
@@ -57,12 +73,71 @@ def read(p):
         return ""
 
 
-def git(*args):
+def load_json(p, default=None):
     try:
-        r = subprocess.run(("git",) + args, cwd=ROOT, capture_output=True, text=True, timeout=120)
-        return r.returncode, (r.stdout or "").strip(), (r.stderr or "").strip()
-    except (OSError, subprocess.SubprocessError) as e:
-        return 1, "", str(e)
+        return json.loads(read(p))
+    except ValueError:
+        return default
+
+
+def config():
+    return load_json(CONFIG, {}) or {}
+
+
+def drive_dir():
+    """The shared folder, from the config file or by looking where the Drive app puts things."""
+    c = config().get("drive_dir")
+    if c and os.path.isdir(c):
+        return c
+    roots = []
+    if sys.platform == "win32":
+        for letter in "GHIJKLMNOPQRSTUVWXYZ":
+            roots += [letter + ":\\My Drive", letter + ":\\Shared drives"]
+        roots += [os.path.join(HOME, "Google Drive"), os.path.join(HOME, "My Drive")]
+    else:
+        roots += [os.path.join(HOME, "Google Drive", "My Drive"),
+                  os.path.join(HOME, "Library", "CloudStorage")]
+    for r in roots:
+        if not os.path.isdir(r):
+            continue
+        cand = os.path.join(r, FOLDER)
+        if os.path.isdir(cand):
+            return cand
+        try:                                   # one level in, for Shared drives / CloudStorage
+            for d in os.listdir(r):
+                cand = os.path.join(r, d, FOLDER)
+                if os.path.isdir(cand):
+                    return cand
+        except OSError:
+            pass
+    return None
+
+
+def drive_latest():
+    """(release, archive path, folder) from the Drive folder, or (None, None, folder)."""
+    d = drive_dir()
+    if not d:
+        return None, None, None
+    meta = load_json(os.path.join(d, "latest.json"))
+    if not meta or not meta.get("release"):
+        return None, None, d
+    z = os.path.join(d, meta.get("zip") or "")
+    if not os.path.exists(z):
+        return meta["release"], None, d
+    want = meta.get("sha256")
+    if want and sha(z) != want:
+        # A file still syncing, or a truncated copy. Say so; do not install it.
+        return meta["release"], "PARTIAL", d
+    return meta["release"], z, d
+
+
+def installed_release():
+    st = load_json(STATE, {}) or {}
+    if st.get("release"):
+        return st["release"]
+    m = re.search(r'^\s*version:\s*"?([0-9.]+)"?',
+                  read(os.path.join(SKILLS, "obsidian-second-brain", "SKILL.md")), re.M)
+    return m.group(1) if m else None
 
 
 def find_vault(named):
@@ -83,29 +158,6 @@ def find_vault(named):
         except (ValueError, OSError):
             pass
     return None
-
-
-def newest_tag():
-    """The newest release tag on the remote, in version order rather than by date."""
-    code, out, _ = git("ls-remote", "--tags", "--refs", "origin")
-    if code != 0:
-        return None
-    tags = [l.split("refs/tags/")[-1] for l in out.splitlines() if "refs/tags/" in l]
-    rel = [t for t in tags if re.fullmatch(r"v?\d+(\.\d+)*", t)]
-    if not rel:
-        return None
-    return sorted(rel, key=lambda t: [int(x) for x in t.lstrip("v").split(".")])[-1]
-
-
-def installed_release():
-    if os.path.exists(STATE):
-        try:
-            return json.loads(read(STATE)).get("release")
-        except ValueError:
-            pass
-    m = re.search(r'^\s*version:\s*"?([0-9.]+)"?',
-                  read(os.path.join(SKILLS, "obsidian-second-brain", "SKILL.md")), re.M)
-    return m.group(1) if m else None
 
 
 def mirror(src, dst, manifest_files, prefix):
@@ -135,74 +187,32 @@ def mirror(src, dst, manifest_files, prefix):
     return copied, removed
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--pull", action="store_true")
-    ap.add_argument("--check", action="store_true")
-    ap.add_argument("--vault")
-    ap.add_argument("--skills-dir", default=SKILLS)
-    ap.add_argument("--no-checks", action="store_true", help="skip the vault sync and install check")
-    a = ap.parse_args()
-
-    mpath = os.path.join(ROOT, "MANIFEST.json")
-    if not os.path.exists(mpath):
-        print("no MANIFEST.json beside this script - is this a clone of the repository?")
+def install(root, vault, skills_dir, run_checks):
+    """Install the release unpacked at `root`. Returns an exit code."""
+    man = load_json(os.path.join(root, "MANIFEST.json"))
+    if not man:
+        print("no MANIFEST.json in %s - that is not a release." % root)
         return 2
-    man = json.loads(read(mpath))
-    here_release = man["release"]
-    have = installed_release()
-
-    if a.check or a.pull:
-        code, _, err = git("fetch", "--tags", "--quiet")
-        if code != 0:
-            print("could not reach the repository: " + (err.splitlines()[0][:120] if err else "no network"))
-            print("installed: %s. Nothing changed." % (have or "unknown"))
-            return 0 if a.check else 1
-        tag = newest_tag()
-        if a.check:
-            print("installed %s - newest release %s" % (have or "unknown", tag or "unknown"))
-            newer = bool(tag and have and tag.lstrip("v") != have)
-            # Recorded on disk so the session hook can mention a release that has sat unclaimed
-            # for days without ever going near the network itself.
-            notice = os.path.join(CLAUDE_DIR, "second-brain-update.json")
-            if newer:
-                if not (os.path.exists(notice) and
-                        json.loads(read(notice) or "{}").get("release") == tag.lstrip("v")):
-                    with io.open(notice, "w", encoding="utf-8") as fh:
-                        json.dump({"release": tag.lstrip("v"), "tag": tag, "installed": have}, fh, indent=1)
-                print("A newer release is available. To take it, say: update the second brain")
-                return 3
-            if os.path.exists(notice):
-                os.remove(notice)
-            print("Up to date. Nothing to do.")
-            return 0
-        if tag:
-            code, _, err = git("checkout", "--quiet", tag)
-            if code != 0:
-                print("could not move to %s: %s" % (tag, err[:160]))
-                return 1
-            man = json.loads(read(mpath))
-            here_release = man["release"]
-            print("moved to %s" % tag)
+    release, have = man["release"], installed_release()
 
     bad = [rel for rel, want in man["files"].items()
-           if not os.path.exists(os.path.join(ROOT, rel)) or sha(os.path.join(ROOT, rel)) != want]
+           if not os.path.exists(os.path.join(root, rel)) or sha(os.path.join(root, rel)) != want]
     if bad:
-        print("This clone does not match its own manifest - %d file(s). NOTHING was installed." % len(bad))
+        print("This release does not match its own manifest - %d file(s). NOTHING was installed."
+              % len(bad))
         for rel in bad[:10]:
             print("  " + rel)
-        print("Fix with: git status, then git checkout -- .   (or clone again)")
         return 1
 
-    vault = find_vault(a.vault)
-    print("installing release %s%s" % (here_release, ("  (was %s)" % have) if have else ""))
-
-    dests = {"skills": a.skills_dir, "vault": vault or ""}
+    print("installing release %s%s" % (release, ("  (was %s)" % have) if have else ""))
+    dests = {"skills": skills_dir, "vault": vault or ""}
     installed = []
     for e in man["entries"]:
         if e["rule"] == "none":
             continue
-        src = os.path.join(ROOT, e["source"])
+        src = os.path.join(root, e["source"])
+        if not os.path.exists(src):
+            continue
         if "{vault}" in e["dest"] and not vault:
             print("  skipped %s - no vault found. Re-run with --vault \"<path>\"" % e["source"])
             continue
@@ -245,22 +255,120 @@ def main():
         return 1
     print("  verified by hash: %d file(s) match the manifest" % len(man["files"]))
 
-    with io.open(STATE, "w", encoding="utf-8", newline="\n") as fh:
-        json.dump({"release": here_release, "from": ROOT}, fh, indent=1)
+    with io.open(STATE, "w", encoding="utf-8") as fh:
+        json.dump({"release": release, "from": root}, fh, indent=1)
+    if os.path.exists(NOTICE):
+        os.remove(NOTICE)
 
-    if not a.no_checks and vault:
-        sync = os.path.join(HERE, "sync-vault.py")
-        if os.path.exists(sync):
-            print("")
-            subprocess.run([sys.executable, sync, vault, "--fix"])
-        chk = os.path.join(HERE, "check-install.py")
-        if os.path.exists(chk):
-            print("")
-            subprocess.run([sys.executable, chk, vault])
+    if run_checks and vault:
+        for script in ("sync-vault.py", "check-install.py"):
+            p = os.path.join(HERE, script)
+            if os.path.exists(p):
+                print("")
+                subprocess.run([sys.executable, p, vault] + (["--fix"] if "sync" in script else []))
 
-    print("\nRelease %s is installed." % here_release)
+    print("\nRelease %s is installed." % release)
     print("A conversation already open keeps the old copy - open a new one for this to take effect.")
     return 0
+
+
+def no_drive_message(release, folder_missing=True):
+    """What to tell the owner when a release exists and this machine cannot reach the folder."""
+    url = config().get("drive_url") or "the shared Drive folder"
+    print("")
+    print("Release %s is available, and this machine cannot see the shared folder." % release)
+    if folder_missing:
+        print("Google Drive for desktop is either not installed, or not syncing the folder.")
+    print("")
+    print("Two ways forward, and the first one is worth doing once:")
+    print("  1. Install Google Drive for desktop and let it sync %s." % FOLDER)
+    print("     After that every update is automatic and costs nothing.")
+    print("  2. Open %s in a browser, download the archive," % url)
+    print("     and run:  python tools/update.py --from-zip \"<the file you downloaded>\"")
+    print("")
+    print("Nothing was changed.")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--check", action="store_true")
+    ap.add_argument("--from-zip")
+    ap.add_argument("--from-repo", action="store_true", help="install this clone, not the Drive copy")
+    ap.add_argument("--vault")
+    ap.add_argument("--skills-dir", default=SKILLS)
+    ap.add_argument("--no-checks", action="store_true")
+    a = ap.parse_args()
+
+    have = installed_release()
+    vault = find_vault(a.vault)
+
+    if a.check:
+        release, archive, folder = drive_latest()
+        if not folder:
+            print("installed %s - the shared Drive folder is not on this machine" % (have or "unknown"))
+            print("Set it up, or use: python tools/update.py --from-zip \"<downloaded file>\"")
+            return 4
+        if not release:
+            print("installed %s - the shared folder has no latest.json yet" % (have or "unknown"))
+            return 0
+        print("installed %s - newest release %s" % (have or "unknown", release))
+        if have and release != have:
+            with io.open(NOTICE, "w", encoding="utf-8") as fh:
+                json.dump({"release": release, "installed": have,
+                           "archive": archive if archive != "PARTIAL" else None}, fh, indent=1)
+            if archive == "PARTIAL":
+                print("The archive is still syncing (its hash does not match latest.json yet).")
+                print("It will be ready shortly; nothing to do.")
+                return 0
+            print("A newer release is available. To take it, say: update the second brain")
+            return 3
+        if os.path.exists(NOTICE):
+            os.remove(NOTICE)
+        print("Up to date. Nothing to do.")
+        return 0
+
+    if a.from_zip:
+        z = a.from_zip
+        if not os.path.exists(z):
+            print("no such file: " + z)
+            return 2
+        with tempfile.TemporaryDirectory() as tmp:
+            try:
+                with zipfile.ZipFile(z) as zf:
+                    zf.extractall(tmp)
+            except (zipfile.BadZipFile, OSError) as e:
+                print("that file is not a readable archive: %s" % e)
+                return 1
+            root = tmp
+            if not os.path.exists(os.path.join(root, "MANIFEST.json")):
+                subs = [d for d in os.listdir(tmp) if os.path.isdir(os.path.join(tmp, d))]
+                for d in subs:
+                    if os.path.exists(os.path.join(tmp, d, "MANIFEST.json")):
+                        root = os.path.join(tmp, d)
+                        break
+            return install(root, vault, a.skills_dir, not a.no_checks)
+
+    if not a.from_repo:
+        release, archive, folder = drive_latest()
+        if folder and archive and archive != "PARTIAL":
+            with tempfile.TemporaryDirectory() as tmp:
+                with zipfile.ZipFile(archive) as zf:
+                    zf.extractall(tmp)
+                root = tmp
+                if not os.path.exists(os.path.join(root, "MANIFEST.json")):
+                    for d in os.listdir(tmp):
+                        if os.path.exists(os.path.join(tmp, d, "MANIFEST.json")):
+                            root = os.path.join(tmp, d)
+                            break
+                return install(root, vault, a.skills_dir, not a.no_checks)
+        if folder and archive == "PARTIAL":
+            print("The archive in the shared folder is still syncing. Try again in a minute.")
+            return 1
+        if not os.path.exists(os.path.join(REPO, "MANIFEST.json")):
+            no_drive_message(release or "the newest", folder_missing=not folder)
+            return 4
+
+    return install(REPO, vault, a.skills_dir, not a.no_checks)
 
 
 if __name__ == "__main__":

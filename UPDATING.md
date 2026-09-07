@@ -50,7 +50,7 @@ tag.
 
 ---
 
-## The gate — seven tests
+## The gate — eight tests
 
 ```bash
 python tools/test_all.py
@@ -65,6 +65,7 @@ python tools/test_all.py
 | **5** | A full install into an empty machine passes its own check |
 | **6** | `SKILL.md`, the CHANGELOG's newest entry and `MANIFEST.json` agree on the version |
 | **7** | **This version is not already released.** A released number has to keep meaning one thing, so a distributed file may not change under a tag that already exists. *Editing the tools, the docs or a test changes nothing anybody installs and is not affected* |
+| **8** | **The shared folder is not behind the newest tag.** A tag that was pushed and never published is a release that reached two machines |
 
 > **Tests 1 and 5 are the ones that matter most, because they are written from the receiving end.**
 > *Everything else here runs on a machine where it already works, which is exactly the machine that
@@ -106,28 +107,63 @@ manifest.
 python tools/release.py
 ```
 
-Regenerates the manifest, refuses a dirty tree, runs the gate, tags `v<version>`, pushes both.
+Regenerates the manifest, refuses a dirty tree, runs the gate, tags `v<version>`, pushes both, **and
+publishes the archive and `latest.json` to the shared Drive folder** - then reads them back the way a
+receiving machine will.
 
-**Then it is done.** Every machine's daily check sees the new tag within a day and offers it. **Nothing
-installs by itself**, because a skill replaced under a running conversation is not re-read by it.
+> ⛔ **A release that fails to publish fails.** *Thirteen people read the Drive folder and not the
+> repository*, so a tag that never reached it is a release that reached two machines. It refuses to
+> run at all when the folder is not on the machine, unless you say `--no-publish` and mean it.
+
+**Then it is done.** Every machine's daily check offers it within a day. **Nothing installs by itself**,
+because a skill replaced under a running conversation is not re-read by it.
 
 ---
 
 ## How it lands on a machine
 
-**A daily routine asks the repository for the newest tag.** If it matches what is installed it says
-nothing at all. If it is newer it sends one notification naming the release and what changed.
+**Two audiences, and only one of them has GitHub.** *Most of the team are not developers and have no
+account*, so the repository is for the two people who work on the skill and **the shared Drive folder is
+how everybody else receives a release.**
 
-**The person says *"update the second brain"* whenever it suits them.** Then:
+### The folder
 
-1. `update.py` verifies the clone against the manifest. **One wrong hash and nothing is touched** - a
-   half-downloaded release never reaches the skill folder.
+    KAPITA Second Brain/
+      latest.json                 release, archive name, sha256, date
+      second-brain-<version>.zip  every file the manifest claims, at its own path
+
+**`release.py` writes both, and reads them back before it says it published.** Nobody uploads anything
+by hand.
+
+> **A machine compares versions, never modification dates.** *A date changes when the same bytes are
+> re-uploaded, and does not change when it matters.* **And the hash in `latest.json` is what makes an
+> unverified copy impossible to install**, including a file that is only half synced: that case is
+> reported as still syncing rather than installed.
+
+### The three sources, in order
+
+| | |
+|---|---|
+| **1 · Google Drive for desktop** | a local path. One file read, no network, works offline |
+| **2 · This clone** | `--from-repo`, for the two of you |
+| **3 · A file downloaded in a browser** | `--from-zip <path>`. **No account, no app, no repository** |
+
+**Three is a real path, not a consolation.** A machine with no Drive app is told, *every time a release
+comes out*, to either install the app once or download the archive and hand it over. **The install that
+follows is byte-identical either way** — same manifest, same verification.
+
+### What the person does
+
+**A daily routine reads `latest.json` and says nothing when it matches.** When it does not, one
+notification. The person says *"update the second brain"* when it suits them, and then:
+
+1. The source is verified against its own manifest. **One wrong hash and nothing is touched.**
 2. It installs by the manifest's rules.
-3. **It verifies what landed, file by file, by hash.** *A copy that reported success while silently
+3. **What landed is verified, file by file, by hash.** *A copy that reported success while silently
    skipping files has happened on this project before.*
-4. It syncs the vault scaffold - additive, it overwrites nothing - and runs the install check.
+4. The vault scaffold is synced - additive, it overwrites nothing - and the install check runs.
 
-**It takes seconds, and nothing is unavailable meanwhile.** The conversation that ran it keeps the old
+**It takes seconds and nothing is unavailable meanwhile.** The conversation that ran it keeps the old
 copy; the next one gets the new.
 
 ---
@@ -136,7 +172,16 @@ copy; the next one gets the new.
 
 ```bash
 git checkout v<previous>
-python tools/update.py
+python tools/release.py --no-publish   # or bump the version and release forward
 ```
 
-**That is the whole reason the release is a tag.**
+**That is the whole reason the release is a tag.** ⚠️ **Drive keeps no history**, so the folder holds
+only the current release: **rolling back is republishing the older one**, and the cleanest form of it is
+usually to fix forward and cut a new version rather than to put an old number back in front of people.
+
+**On one machine**, either of these installs whatever you point it at:
+
+```bash
+python tools/update.py --from-repo
+python tools/update.py --from-zip "<an older archive>"
+```

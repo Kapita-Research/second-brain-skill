@@ -1,56 +1,79 @@
 #!/usr/bin/env python3
-"""Cut a release: regenerate the manifest, run the gate, tag, push.
+"""Cut a release: manifest, gate, tag, push, and publish it to the shared Drive folder.
 
-    python tools/release.py            # tag the version in SKILL.md
-    python tools/release.py --dry-run  # everything except the tag and the push
+    python tools/release.py              # the whole thing
+    python tools/release.py --dry-run    # everything except the tag, the push and the publish
+    python tools/release.py --no-publish # tag and push only. Use only if Drive is not on this machine
 
-**A tag is the only thing anybody's machine installs.** `main` is where the two of you work; the tag is
-what fifteen machines pick up. That separation is the whole safety mechanism: a half-finished commit on
-`main` reaches nobody, and a release that turns out to be wrong is undone by pointing at the previous
-tag rather than by finding an old archive.
+**Two audiences, one command.** The repository is for the two people who work on the skill; **the
+shared Drive folder is how the other thirteen receive it**, and most of them have no GitHub account and
+no reason to get one. So publishing is not a separate thing anybody has to remember: it is the last
+step of cutting the release, and a release that fails to publish fails.
+
+## What lands in the Drive folder
+
+    latest.json                 release, archive name, sha256, date
+    second-brain-<version>.zip  every file the manifest claims, at its own path
+
+**`latest.json` is what a machine reads** - one small file, compared by version rather than by
+modification date. *A date changes when somebody re-uploads the same bytes and does not change when it
+matters; a version says exactly whether what you have is older.* **The hash is what makes an unverified
+copy impossible to install**, including one that is only half synced.
 
 ## What it refuses to do
 
 * **Tag a dirty tree.** What is tagged has to be what was tested.
 * **Tag when the gate fails.** `test_all.py` runs first, every time.
-* **Reuse a tag.** Bump `metadata.version` in `SKILL.md` and add the CHANGELOG entry first; test 6
-   already refuses when those two disagree.
+* **Reuse a version.** Test 7 already refuses when a distributed file has changed under a tag that
+  exists; this refuses the duplicate tag outright.
 """
 import argparse
+import datetime
+import hashlib
 import io
 import json
 import os
-import re
 import subprocess
 import sys
+import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 PY = sys.executable
+sys.path.insert(0, HERE)
+import update as up                                                   # noqa: E402
 
 
-def git(*args, capture=True):
-    r = subprocess.run(("git",) + args, cwd=ROOT, capture_output=capture, text=True)
+def git(*args):
+    r = subprocess.run(("git",) + args, cwd=ROOT, capture_output=True, text=True)
     return r.returncode, (r.stdout or "").strip(), (r.stderr or "").strip()
+
+
+def build_archive(man, out_dir, version):
+    """Every file the manifest claims, at its repository path. The updater unpacks and installs it."""
+    name = "second-brain-%s.zip" % version
+    path = os.path.join(out_dir, name)
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as zf:
+        zf.write(os.path.join(ROOT, "MANIFEST.json"), "MANIFEST.json")
+        for rel in sorted(man["files"]):
+            zf.write(os.path.join(ROOT, rel), rel)
+    h = hashlib.sha256(io.open(path, "rb").read()).hexdigest()
+    return name, path, h
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--no-publish", action="store_true")
     ap.add_argument("--remote", default="origin")
     a = ap.parse_args()
-
-    sk = io.open(os.path.join(ROOT, "skill", "SKILL.md"), encoding="utf-8").read(4000)
-    m = re.search(r'^\s*version:\s*"?([0-9.]+)"?', sk, re.M)
-    if not m:
-        print("no metadata.version in skill/SKILL.md")
-        return 1
-    version = m.group(1)
-    tag = "v" + version
 
     print("regenerating the manifest...")
     if subprocess.run([PY, os.path.join(HERE, "manifest.py")]).returncode != 0:
         return 1
+    man = json.load(io.open(os.path.join(ROOT, "MANIFEST.json"), encoding="utf-8"))
+    version = man["release"]
+    tag = "v" + version
 
     code, out, _ = git("status", "--porcelain")
     if out:
@@ -59,9 +82,18 @@ def main():
             print("  " + line)
         return 1
 
+    folder = up.drive_dir()
+    if not folder and not a.no_publish and not a.dry_run:
+        print("\nThe shared Drive folder was not found on this machine.")
+        print("Thirteen people receive the release from there, so a release that does not reach it")
+        print("reaches almost nobody. Install Google Drive for desktop and sync '%s'," % up.FOLDER)
+        print("or set its path:  %s  ->  {\"drive_dir\": \"...\"}" % up.CONFIG)
+        print("If you really mean to tag without publishing, pass --no-publish.")
+        return 1
+
     print("\nrunning the gate...")
     if subprocess.run([PY, os.path.join(HERE, "test_all.py")]).returncode != 0:
-        print("\nThe gate failed. No tag.")
+        print("\nThe gate failed. No tag, and nothing published.")
         return 1
 
     code, out, _ = git("tag", "-l", tag)
@@ -70,24 +102,46 @@ def main():
         return 1
 
     if a.dry_run:
-        print("\nDRY RUN - would tag %s and push it to %s." % (tag, a.remote))
+        print("\nDRY RUN - would tag %s, push it to %s, and publish to %s."
+              % (tag, a.remote, folder or "(no Drive folder found)"))
         return 0
 
     code, _, err = git("tag", "-a", tag, "-m", "release " + version)
     if code != 0:
         print("could not tag: " + err[:200])
         return 1
-    code, _, err = git("push", a.remote, "HEAD")
-    if code != 0:
-        print("could not push the branch: " + err[:300])
-        return 1
-    code, _, err = git("push", a.remote, tag)
-    if code != 0:
-        print("could not push the tag: " + err[:300])
+    for what in ("HEAD", tag):
+        code, _, err = git("push", a.remote, what)
+        if code != 0:
+            print("could not push %s: %s" % (what, err[:300]))
+            print("The tag exists locally. Fix the remote, then: git push %s %s" % (a.remote, tag))
+            return 1
+    print("\npushed %s" % tag)
+
+    if a.no_publish:
+        print("--no-publish: the Drive folder was not written. Nobody outside the repository has this yet.")
+        return 0
+
+    print("publishing to %s ..." % folder)
+    name, path, h = build_archive(man, folder, version)
+    meta = {"release": version, "zip": name, "sha256": h,
+            "date": datetime.date.today().isoformat(),
+            "size_kb": round(os.path.getsize(path) / 1024)}
+    with io.open(os.path.join(folder, "latest.json"), "w", encoding="utf-8") as fh:
+        json.dump(meta, fh, indent=1)
+        fh.write("\n")
+
+    # Read both back the way a receiving machine will, so a failed write is caught here rather
+    # than by thirteen people tomorrow.
+    seen, archive, _ = up.drive_latest()
+    if seen != version or archive in (None, "PARTIAL"):
+        print("PUBLISH VERIFY FAILED - the folder does not read back as release %s." % version)
+        print("The tag is pushed. Fix the folder before telling anybody.")
         return 1
 
+    print("published %s (%d KB) and latest.json - verified by reading them back." % (name, meta["size_kb"]))
     print("\nReleased %s." % tag)
-    print("Every machine's daily check will offer it from now on. Nothing installs by itself.")
+    print("Every machine's daily check will offer it within a day. Nothing installs by itself.")
     return 0
 
 

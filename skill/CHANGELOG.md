@@ -343,6 +343,22 @@ there is none, and sends one notification when there is. **The person installs w
 and a second `SessionStart` hook mentions a release only after it has sat unclaimed for three days,
 comparing two numbers already on disk and never touching the network.
 
+**And the release does not arrive through the repository, because most of the people receiving it are
+not developers and have no account there.** *A distribution channel that assumes GitHub assumes wrong
+about thirteen of fifteen machines.* **The repository is where the work happens; a shared Drive folder
+is where the release lands** - one small file naming the current version, and the archive it names.
+
+**Compared by version, never by modification date.** *A date changes when the same bytes are uploaded
+again and does not change when it matters*, and it answers the wrong question: not *"did something
+change"* but ⛔ ***"is what I have older than what is there"***. **The archive's hash sits in the same
+file**, which makes an unverified copy impossible to install - **including one that is only half
+synced**, reported as still syncing rather than installed as if it were whole.
+
+⚪ **And a machine with no Drive app is not stuck.** It is told, *each time a release comes out*, to
+either install the app once or download the archive in a browser and hand it over. **The install that
+follows is byte-identical** - same manifest, same verification. *The fallback costs the same work every
+time instead of once, and that is the only difference.*
+
 **Machines install a tag, not the branch.** *That is what makes a bad release recoverable and a
 half-finished commit harmless*, and it is why the six-test gate exists: **two of the six are written
 from the receiving end**, which is the only place the interesting failures live.

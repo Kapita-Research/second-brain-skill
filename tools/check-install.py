@@ -219,6 +219,23 @@ def main(argv):
                 routine = d
                 break
     rel = os.path.join(CLAUDE_DIR, "second-brain-release.json")
+    # 11d - where a release arrives from. Optional: the browser fallback works, it is just the
+    #       same work every time instead of once.
+    try:
+        sys.path.insert(0, HERE)
+        import update as _up
+        drive = _up.drive_dir()
+        rel_avail, _arch, _f = _up.drive_latest()
+    except Exception:                                            # noqa: BLE001 - never fail the check
+        drive, rel_avail = None, None
+    check(drive, "Shared release folder reachable",
+          ("%s%s" % (os.path.basename(drive), "  (offers %s)" % rel_avail if rel_avail else ""))
+          if drive else "Google Drive for desktop is not syncing it",
+          "install Google Drive for desktop and sync the shared folder, and every update becomes a "
+          "file read. Without it you will be asked, each time a release comes out, to download the "
+          "archive from the browser and hand it over - the same work every time instead of once",
+          required=False)
+
     check(routine, "Daily update check scheduled", routine or "",
           "tell Claude: \"set up the daily second brain update check\". Once a day it asks whether a "
           "newer release exists and says nothing when there is not one. Without it this machine "

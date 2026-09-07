@@ -191,6 +191,29 @@ def t_not_released():
     return True, "%s released, and nothing distributed has changed since" % tag
 
 
+@test("8 - the shared folder is not behind the newest tag")
+def t_published():
+    """Thirteen people read the Drive folder, not the repository.
+
+    A tag that was pushed and never published is a release that reached two machines. This compares
+    what the folder says with the newest tag, and skips itself on a machine that has neither.
+    """
+    sys.path.insert(0, HERE)
+    import update as up
+    release, _archive, folder = up.drive_latest()
+    if not folder:
+        return True, "no shared folder on this machine - skipped"
+    code, out = run(["git", "-C", ROOT, "tag", "-l", "v*"])
+    tags = [t.strip().lstrip("v") for t in out.splitlines() if t.strip()]
+    if not tags:
+        return True, "nothing released yet - skipped"
+    newest = sorted(tags, key=lambda t: [int(x) for x in t.split(".") if x.isdigit()])[-1]
+    if release != newest:
+        return False, ("the folder offers %s, the newest tag is v%s. Run: python tools/release.py"
+                       % (release or "nothing", newest))
+    return True, "folder and newest tag both %s" % newest
+
+
 def extra_types(claude_md):
     """A vault may register its own type and status names; the validator has to be told."""
     out = []

@@ -135,30 +135,41 @@ read six months later when it is wrong.**
 
 **Re-run it whenever you add or remove a skill.** It is one note and it is cheap to rewrite.
 
-## 10 · The daily update check  🔴 required
+## 10 · Updates  🔴 required
 
-**Tell Claude: *"set up the daily second brain update check"*.**
+**Tell Claude: *"set up the second brain updates"*.** Two small things, and then you never think about
+it again.
 
-**It creates one scheduled routine.** Once a day it asks the repository whether a newer release exists.
-**If it does not, it says nothing at all.** If it does, you get one notification naming the release and
-what changed, and you install it by saying *"update the second brain"* whenever it suits you.
+### The folder the release arrives in
 
-> ### Why this is required rather than optional
-> **The skill will keep changing.** Fixes, new rules, a corrected number in the firm's layer. **A
-> machine that never hears about a release is a machine running last month's rules while everyone else
-> moved on** — and the person on it has no way of knowing.
+**Google Drive for desktop, syncing the shared `KAPITA Second Brain` folder.** It holds one small file
+saying which release is current, and the archive itself.
 
-**The update takes seconds and nothing is unavailable while it runs.** The conversation you are in keeps
-the copy it started with; the next one gets the new one. **So you never have to pick a quiet moment.**
+> **This is why it is worth installing:** the update then costs a file read. **No account, no login, no
+> link to find, nothing to download by hand** — and it works with the internet down, because the last
+> release is already sitting on your disk.
 
-⛔ **Nothing installs by itself.** The routine only tells you.
+⚪ **If you would rather not install it, nothing is blocked.** You will be asked, **each time a release
+comes out**, to either install the app or open the folder in a browser, download the archive, and hand
+it over: Claude runs `update.py --from-zip` on it and the result is identical. *It is the same work
+every time instead of once.*
 
-**Two things it needs**, and Claude sets both up:
+### The daily check
 
-| | |
-|---|---|
-| **A clone of the repository** | `git clone <repo>` somewhere you will not delete, then `git config core.hooksPath .githooks` inside it |
-| **A second `SessionStart` hook** | mentions a release that has been waiting more than three days. No network, it compares two numbers already on disk |
+**One scheduled routine.** Once a day it reads that small file. **If nothing changed it says nothing at
+all.** If there is a release you get one notification naming it and what changed.
+
+**You install it by saying *"update the second brain"* whenever it suits you.** ⛔ **Nothing installs by
+itself.**
+
+> **The update takes seconds and nothing is unavailable while it runs.** The conversation you are in
+> keeps the copy it started with; the next one gets the new one. **So there is no quiet moment to pick.**
+
+### Why this one is required
+
+**The skill keeps changing** — fixes, new rules, a corrected figure in the firm's layer. **A machine
+nobody tells is a machine running last month's rules while everyone else moved on**, and the person on
+it has no way of knowing.
 
 ## 11 · The first session
 
