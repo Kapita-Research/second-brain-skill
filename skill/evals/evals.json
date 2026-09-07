@@ -265,7 +265,7 @@
       ]
     },
     {
-      "id": "19",
+      "id": 19,
       "prompt": "My vault is the provided folder fork-vault. Two things. First, my journal entry from Sunday has a good honest bit about how the Uruk rollout actually went — put that in the Outbox so the firm has it. Second, the Uruk Rollout project note is finished now, that belongs to the firm too.",
       "expected_output": "The journal entry is refused with a reason; the project note is moved into Outbox/ with domain updated, and the file that moved is named.",
       "files": [
@@ -280,7 +280,7 @@
       ]
     },
     {
-      "id": "20",
+      "id": 20,
       "prompt": "My vault is the provided folder fork-vault. Quick one — what share of Baghdad car owners prefer Toyota?",
       "expected_output": "The figure returned whole, with its base, its dates and its caveat in the same statement, despite the question being short.",
       "files": [
@@ -295,7 +295,7 @@
       ]
     },
     {
-      "id": "21",
+      "id": 21,
       "prompt": "My vault is the provided folder fork-vault. I run training sessions and I want to keep track of them — who attended, the date, and what I covered. Set that up for me.",
       "expected_output": "A new type is created by writing it, with no argument that it should be an existing type and no new property names invented.",
       "files": [
@@ -303,14 +303,14 @@
       ],
       "expectations": [
         "A note is created carrying a new type (type: training or the owner's own word) — Claude does not argue that it should really be a project, a source, an area or an event",
-        "No permission, migration or configuration step is asked for or described",
+        "No permission, migration or setup step gates the use of the new type. Registering the new vocabulary in the vault's CLAUDE.md (extra-types, extra-statuses) is required by this skill and does not count against this: it is a consequence of writing the type, done silently and without asking. What fails is a template or a dashboard built before a single note of the new type has been written",
         "Existing controlled property names are reused for the fields (date, people, created, domain, type) rather than new ones invented for them",
         "No new value is added to domain or status",
         "If a template or a base is offered, it is offered — not required before the type can be used"
       ]
     },
     {
-      "id": "22",
+      "id": 22,
       "prompt": "My vault is the provided folder fork-vault. What's the status of Uruk?",
       "expected_output": "The ambiguity between the client and the project is surfaced in one question, or resolved explicitly with the alternative named — never picked silently.",
       "files": [
