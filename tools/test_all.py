@@ -203,8 +203,15 @@ def t_published():
     release, _archive, folder = up.drive_latest()
     if not folder:
         return True, "no shared folder on this machine - skipped"
-    code, out = run(["git", "-C", ROOT, "tag", "-l", "v*"])
-    tags = [t.strip().lstrip("v") for t in out.splitlines() if t.strip()]
+    # Released means pushed, not tagged locally. A local tag that has not left the machine is a
+    # release in progress - and release.py creates the tag before it pushes, so reading local tags
+    # here made the gate fail during the very release it was waiting for.
+    code, out = run(["git", "-C", ROOT, "ls-remote", "--tags", "--refs", "origin"])
+    if code != 0:
+        return True, "could not reach the remote - skipped"
+    tags = [l.split("refs/tags/")[-1].strip().lstrip("v") for l in out.splitlines()
+            if "refs/tags/v" in l]
+    tags = [t for t in tags if t and all(x.isdigit() for x in t.split("."))]
     if not tags:
         return True, "nothing released yet - skipped"
     newest = sorted(tags, key=lambda t: [int(x) for x in t.split(".") if x.isdigit()])[-1]

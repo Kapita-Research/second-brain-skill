@@ -203,7 +203,7 @@
   "tools/manifest.py": "434005eb6be8c55465f27438b585126d74c87122f6d3f662ba497ac37dd00d4b",
   "tools/release.py": "b0bc975e49243c6d94388170bc752875d0c9fde02d9a3fd6ee9e860d6c4af287",
   "tools/sync-vault.py": "9da093eb271f8f8b30eee8efc770bf3d7b08c4e3a433c371206ab17a00b1dac7",
-  "tools/test_all.py": "75564adc648e7585e778689d26e88f3e07f6f1b3931ee3b3ba14c4a2095da79c",
+  "tools/test_all.py": "51c9f43c4aa46eb6966580678fdae25126a48542b23591a4e44899c54f98767f",
   "tools/update.py": "6715e19c26126ecd243daf8202b4cde1559f1d29bfab4951ced3f1718a48373a",
   "upstream/obsidian-second-brain/CHANGELOG.md": "09f57c4133913a24f23acc6a6c53933b16b6f63f4fcc8fa641fe2749539f702f",
   "upstream/obsidian-second-brain/README.md": "ffc531a49a85e4527c739069018c30769bd28d0ec8762c4b20152dfde24ac490",
