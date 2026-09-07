@@ -1,213 +1,156 @@
-# Install checklist — the second brain
+# Installing the second brain
 
-**Eleven steps, then one command that checks all of them.**
-
-> 🔴 **Five of these are outside the skill — in your own files — and the skill does not work properly
-> without them.** They are the ones people skip, because nothing forces them: **the two files at your
-> notes folder's root (4)** · **the Obsidian CLI registration (6)** · **your own person note (7)** ·
-> **automatic capture (8)** · **and the two hooks (8, second half)**. The check at the bottom marks each of them **REQUIRED**.
-
-> ## If something is not working, you do not need to read this file.
+> # Say this to Claude, and nothing else:
 >
-> **Open a new conversation with Claude and say: *"run the second brain install check"*.** It runs the
-> command at the bottom and tells you which line failed and what to do about it.
+> ## *"Do the full checklist of installation of KAPITA second brain skill"*
+>
+> **It does the whole thing.** You are not asked to choose a folder, copy a file, edit a setting or run
+> a command. **Everything below is written for Claude, not for you** — read it only if you want to know
+> what happened.
+
+**When it is finished you will simply be talking to it, and it will be writing notes.** ⚠️ **Open a new
+conversation once it is done** — a skill installed mid-conversation is not picked up by the one already
+running.
 
 ---
 
-## What you are installing
+# For Claude — the runbook
+
+**Follow this in order, and do not ask the person anything it can answer for itself.** *Someone who has
+not used this yet has no basis for choosing a folder layout, and being asked makes an install feel like
+a form.* **The one thing that is genuinely theirs is who they are and what they work on, and that comes
+out of the first conversation rather than an interview.**
+
+## 1 · Run the installer
+
+```bash
+python "<the shared KAPITA Second Brain folder>/install.py"
+```
+
+**Where to look for that folder**, in order:
+
+| | |
+|---|---|
+| **Google Drive for desktop** | `G:\My Drive\KAPITA Second Brain`, or the same name under another drive letter, under `Shared drives`, or in the home folder |
+| **A clone of the repository** | then `python tools/install.py` from it |
+| **Neither** | see *If there is no shared folder* below |
+
+**It does all of this by itself** and prints a line per step:
+
+1. **Checks Python 3.8+**
+2. **Finds the newest release and verifies the archive by hash before unpacking it**
+3. **Creates the notes folder** — `~/OneDrive/Documents/Second Brain`, or `~/Documents/Second Brain`;
+   somewhere synced, because a lost laptop should not take somebody's notes with it
+4. **Scaffolds it** — folders, templates, dashboards, property types, with the findings module on
+5. **Installs the skill and the two root files**, verifying every file by hash after it lands
+6. **Merges three hooks** into `~/.claude/settings.json` and **appends the standing block** to
+   `~/.claude/CLAUDE.md`
+7. **Runs the install check** and prints it
+
+⛔ **It overwrites nothing that belongs to the person.** Settings are merged and backed up, the standing
+block is appended only if absent, and an existing vault is added to rather than replaced.
+
+## 2 · Then do the four things a script cannot
+
+**The installer ends by listing these. Do them without being asked again.**
+
+### a · The daily update routine  🔴
+
+**Create a scheduled task**, once a day, whose whole job is:
+
+```bash
+python "<the shared folder>/install.py" --check
+```
+
+*(or `tools/update.py --check` from a clone)*
+
+**What it does with the result matters more than the schedule:**
+
+| it printed | the task does |
+|---|---|
+| `Up to date` | **replies with one word and nothing else.** This is the normal outcome and it must cost no attention at all |
+| `still syncing` | the same. It resolves itself |
+| `A newer release is available` | **one short message**: the two version numbers, two or three lines from the top of the skill's `CHANGELOG.md`, and *"say **update the second brain** whenever it suits you"* |
+| `the shared folder is not on this machine` | **one short message, and every time it happens**: either install Google Drive for desktop, or download the archive from the folder in a browser and hand over the path |
+
+⛔ **The routine never installs anything. It reports.** **A skill replaced under an open conversation is
+not re-read by it**, so the moment belongs to the person.
+
+### b · The index of installed skills  ⚪
+
+**List `~/.claude/skills/`, read only each `SKILL.md`'s `description:` line, and write one note** — what
+each skill is for and where it lives, grouped by purpose.
+
+⛔ **Pointers, never content.** *No colour token, no template, no threshold copied out.* The skill is
+maintained; a copy of it is not, and the copy is what gets read six months later when it is wrong.
+
+### c · Their own note  🔴
+
+**`People/Me.md`** — their name and its spellings, title, employer, and the links out to their work.
+
+⛔ **Never invent any of it, and never ask for it as a form.** **Talk to them** — what they do, who they
+deal with, what is on this week — **and write real notes as they answer**, this one among them.
+
+> **Without it, anything written on their behalf has nothing to look up, and falls back to
+> `[your name]` in a finished draft.**
+
+### d · Obsidian  ⚪
+
+**obsidian.md, then Open folder as vault.** Nothing breaks without it; several things become *asking*
+instead of *seeing*. **If they install it: Settings → General → Command line interface → Register**,
+which puts a live index behind search instead of plain text matching.
+
+## 3 · Confirm, say one sentence, and start working
+
+```bash
+python "<clone or unpacked release>/tools/check-install.py"
+```
+
+> *"Done. From now on, in any conversation, if you mention something worth keeping it gets written
+> down, and I look there before answering. You never have to name it."*
+
+**Then stop explaining and start using it.**
+
+---
+
+## If there is no shared folder on this machine
+
+**Both paths end in the same install, byte for byte.**
+
+1. **Better, once:** install Google Drive for desktop and let it sync `KAPITA Second Brain`. Every
+   future update then costs a file read, and works with the internet down.
+2. **Or now, by hand:** open
+   [the folder](https://drive.google.com/drive/folders/1D79209rP34Gay9C7LOicFbbpVYcOxOdz) in a browser,
+   download the newest `second-brain-<version>.zip`, unpack it, and run:
+
+```bash
+python tools/install.py
+```
+
+---
+
+## What is being installed
 
 | | Where it goes |
 |---|---|
 | **The skill** | `~/.claude/skills/obsidian-second-brain/` — the instructions Claude follows |
-| **Your notes** | any folder you choose — plain Markdown files, yours, readable in any editor |
+| **The notes** | a folder of plain Markdown files, theirs, readable in any editor |
 | **`KAPITA.md`** | the notes folder — **the firm's conventions.** Replaced whole on every update |
-| **`CLAUDE.md`** | the notes folder — **yours.** Nothing ever replaces it |
-| **Obsidian** | optional and free — turns the notes into something you can see |
+| **`CLAUDE.md`** | the notes folder — **theirs.** Nothing ever replaces it |
+| **Three hooks** | `~/.claude/settings.json` — what makes the rule hold in the two-hundredth message |
+| **The standing block** | `~/.claude/CLAUDE.md` — read at the start of every conversation, in every folder |
+
+> ⛔ **Never write anything personal into `KAPITA.md`.** It is replaced on the next update and whatever
+> was added disappears without a message. **Personal conventions go in `CLAUDE.md`, beside it.**
 
 ---
 
-## 1 · Python
+# When something is not working
 
-**Needed by the scaffold, the health check and this checklist.** `python --version` should print 3.8
-or higher. If not: **python.org**, and tick *Add python.exe to PATH* during install.
+**Open a new conversation and say: *"run the second brain install check"*.**
 
-## 2 · The skill
+Every failing line prints the one thing to do about it. **Required failures are marked `!` and listed
+first; optional ones never fail the run and print what you give up.**
 
-**Copy the `obsidian-second-brain` folder from this package into `~/.claude/skills/`.**
-On Windows that is `C:\Users\<you>\.claude\skills\`.
-
-**Then start a new conversation** — a skill added mid-conversation is not picked up by the one already
-running.
-
-## 3 · The notes folder
-
-**Any empty folder.** Somewhere synced is a good idea — OneDrive, Drive — because these are your notes
-and a lost laptop should not take them.
-
-⛔ **Do not put it inside a git repository or a code project.**
-
-## 4 · The two files at its root  🔴 required
-
-| From this package | Rename to | Whose it is |
-|---|---|---|
-| `kapita-vault-KAPITA.md` | **`KAPITA.md`** | **the firm's** — replaced whole on every update |
-| `dist/CLAUDE.md` | **`CLAUDE.md`** | **yours** — nothing ever replaces it |
-
-⛔ **Never write anything personal into `KAPITA.md`.** It is overwritten on the next update and what
-you added disappears without a message. **Your own conventions go in `CLAUDE.md`.**
-
-## 5 · Obsidian  ⚪ optional
-
-**Optional, free, and changes nothing about the files** — it opens the folder exactly as it is, and you
-can stop using it any day.
-
-**What you give up by skipping it:** every note that mentions a client, visible in a panel · **your
-tasks as a board built from the notes themselves** · clicking a link to follow it · editing a note's
-fields without touching YAML. **Nothing is blocked without it. Several things become *asking* instead
-of *seeing*.**
-
-**obsidian.md** → install → **Open folder as vault** → pick your notes folder.
-
-## 6 · The Obsidian command line interface  ⚪ optional, but pointless to skip if you installed Obsidian
-
-**Settings → General → Command line interface**, then **Set up CLI to work in the terminal → Register.**
-
-**Off by default.** With it on, search uses Obsidian's live index — backlinks, alias resolution,
-property search — instead of matching text. **The toggle alone is not enough; Register is what puts
-`obsidian` on your PATH.**
-
-## 7 · The scaffold — and your own note  🔴 required
-
-**Tell Claude: *"set up my vault"*.** It creates the folders, installs the templates and the dashboard
-views, and writes the property types Obsidian needs so a date behaves like a date.
-
-**Already have a vault from an older version?** `python tools/sync-vault.py "<your vault>" --fix` —
-additive only; it overwrites nothing.
-
-**Then: *"write my own note"*.** 🔴 **Do not skip this.** It writes `People/Me.md` — your name and its
-spellings, your title, your employer, your addresses. **Anything Claude ever writes on your behalf —
-an email, a bio, a form — looks there first.** Without it you get `[your name]` in a finished draft.
-
-## 8 · Automatic capture  🔴 required
-
-**Tell Claude: *"set up automatic capture"*.**
-
-**It appends a short block to `~/.claude/CLAUDE.md`** — read at the start of every conversation, in
-every folder — saying that you will talk about your work rather than ask for a note, and that such
-things should be written down without being announced.
-
-> **Without this, the skill only starts when you say something that obviously sounds like note-taking.**
-> **You will not talk that way.** You will say *"he asked me for the report by Thursday"* — and nothing
-> will happen.
-
-**It is one small file. You can read it, edit it, or delete it to turn this off.**
-
-**Then: *"enforce the second brain with hooks"*.** 🔴 **The second half of the same step.**
-
-**Two hooks go into `~/.claude/settings.json`** — one fires at the start of every conversation, one on
-**every message**.
-
-> **The file above is an instruction. Over a long conversation an instruction can be drifted past.**
-> **A hook is run by the program itself, so it cannot be.**
-
-**Cost: about forty tokens a message. What it buys: the rule holds in the two-hundredth message exactly
-as it did in the first.**
-
-**And if you will keep private opinions in the vault: *"arm the judgement guard"*.** ⚪ Optional — but it
-is **the only protection here that is a mechanism rather than an instruction.** Any read of a
-`Judgements/` note becomes a prompt you answer. **Asking for one costs a click. Claude reaching for one
-while writing something for somebody else produces a prompt you did not expect — and that is the point.**
-
-## 9 · What else is on this machine  ⚪ optional
-
-**Tell Claude: *"index my installed skills in the vault"*.**
-
-**It lists `~/.claude/skills/`, reads one line from each, and writes a single note** — what each skill
-is for and where it lives, grouped by what they are *for*.
-
-> **Half the value of a capability is remembering it exists on the day it is needed.** *A skill nobody
-> remembers is a skill nobody uses* — and the ones you install and forget are usually the ones that
-> would have saved the afternoon.
-
-⛔ **Pointers, never content.** *Nothing is copied out of a skill into the note* — not a colour, not a
-template, not a threshold. **The skill is maintained; a copy of it is not, and the copy is what gets
-read six months later when it is wrong.**
-
-**Re-run it whenever you add or remove a skill.** It is one note and it is cheap to rewrite.
-
-## 10 · Updates  🔴 required
-
-**Tell Claude: *"set up the second brain updates"*.** Two small things, and then you never think about
-it again.
-
-### The folder the release arrives in
-
-**Google Drive for desktop, syncing the shared `KAPITA Second Brain` folder.** It holds one small file
-saying which release is current, and the archive itself.
-
-> **This is why it is worth installing:** the update then costs a file read. **No account, no login, no
-> link to find, nothing to download by hand** — and it works with the internet down, because the last
-> release is already sitting on your disk.
-
-⚪ **If you would rather not install it, nothing is blocked.** You will be asked, **each time a release
-comes out**, to either install the app or open the folder in a browser, download the archive, and hand
-it over: Claude runs `update.py --from-zip` on it and the result is identical. *It is the same work
-every time instead of once.*
-
-### The daily check
-
-**One scheduled routine.** Once a day it reads that small file. **If nothing changed it says nothing at
-all.** If there is a release you get one notification naming it and what changed.
-
-**You install it by saying *"update the second brain"* whenever it suits you.** ⛔ **Nothing installs by
-itself.**
-
-> **The update takes seconds and nothing is unavailable while it runs.** The conversation you are in
-> keeps the copy it started with; the next one gets the new one. **So there is no quiet moment to pick.**
-
-### Why this one is required
-
-**The skill keeps changing** — fixes, new rules, a corrected figure in the firm's layer. **A machine
-nobody tells is a machine running last month's rules while everyone else moved on**, and the person on
-it has no way of knowing.
-
-## 11 · The first session
-
-**Just talk.** Claude will ask what you do, who you deal with, and walk you through your week — and
-write real notes while you answer. **You do not have to prepare anything.**
-
----
-
-# The check
-
-```bash
-python tools/check-install.py
-```
-
-**Twenty-six checks on a fully set-up machine, nothing changed — it only looks.**
-
-**Required failures are marked `!` and listed first** — the skill will not work properly until they are
-done. **Optional ones are marked `-` and never fail the run**; they print what you give up.
-
-**Or say to Claude: *"run the second brain install check"*.**
-
-**Run it now, run it after any update, and run it before asking anyone for help** — it turns *"it isn't
-working"* into a line number.
-
----
-
-## The four that fail most often, and what they look like
-
-| The line | What it means |
-|---|---|
-| **`Obsidian CLI enabled`** | You turned on the toggle but did not press **Register**. Search still works; it just matches text instead of using the index |
-| **`KAPITA.md is current`** | Your copy still says `Shared/` — a folder that no longer exists. **Replace the file** |
-| **`Views exclude Templates/`** | Your dashboards are counting the blank templates as real notes, so every total is off by one |
-| **`Automatic capture configured`** | 🔴 Step 8 was skipped. The skill only starts when you name it — **and you will not name it** |
-| **`Your own person note`** | 🔴 Step 7's second half was skipped. Anything written on your behalf has nothing to look up |
-| **`Standing reminder enforced by hooks`** | 🔴 Step 8's second half was skipped. The rule holds early in a conversation and fades as it grows |
-
----
-
-**When it prints `All N checks pass. Nothing to do.` — you are done, and nothing else on this page
-matters.**
+**Run it after any update, and before asking anyone for help** — it turns *"it isn't working"* into a
+line number.

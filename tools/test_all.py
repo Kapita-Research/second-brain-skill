@@ -221,6 +221,44 @@ def t_published():
     return True, "folder and newest tag both %s" % newest
 
 
+@test("9 - the one-sentence install works on an empty machine")
+def t_full_install():
+    """The sentence the team is given has to do everything by itself.
+
+    Runs `install.py` against a temporary HOME, so the real `~/.claude` is never touched: an empty
+    machine, an empty vault, and afterwards the skill, the scaffold, the hooks and the standing block
+    all have to be in place with the vault validating.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        home = os.path.join(tmp, "home")
+        os.makedirs(home)
+        vault = os.path.join(home, "Second Brain")
+        code, out = run([PY, os.path.join(HERE, "install.py"), "--vault", vault],
+                        env={"USERPROFILE": home, "HOME": home, "HOMEPATH": home})
+        if code != 0:
+            return False, "install.py failed:" + os.linesep + out[-900:]
+        claude = os.path.join(home, ".claude")
+        checks = [
+            (os.path.exists(os.path.join(claude, "skills", "obsidian-second-brain", "SKILL.md")),
+             "the skill did not land"),
+            (os.path.exists(os.path.join(vault, "KAPITA.md")), "the layer did not land"),
+            (os.path.exists(os.path.join(vault, "CLAUDE.md")), "the vault CLAUDE.md did not land"),
+            ("Every conversation is one of two things" in
+             io.open(os.path.join(claude, "CLAUDE.md"), encoding="utf-8", errors="replace").read(),
+             "the standing block was not appended"),
+            ("0 error(s)" in out, "the vault does not validate after a fresh install"),
+        ]
+        try:
+            hooks = json.load(io.open(os.path.join(claude, "settings.json"), encoding="utf-8"))["hooks"]
+            n = sum(len(h.get("hooks", [])) for groups in hooks.values() for h in groups)
+        except (OSError, ValueError, KeyError):
+            n = 0
+        checks.append((n >= 4, "expected four hooks, found %d" % n))
+        bad = [why for ok, why in checks if not ok]
+        return (not bad), ("skill, vault, hooks and block all in place" if not bad
+                           else os.linesep.join(bad))
+
+
 def extra_types(claude_md):
     """A vault may register its own type and status names; the validator has to be told."""
     out = []

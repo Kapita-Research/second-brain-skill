@@ -358,7 +358,58 @@ time comes.**
 
 ---
 
-## 9. Obsidian
+## 9. Updates — where a release comes from, and how to take one
+
+**The skill keeps changing.** Fixes, new rules, a corrected figure in this file. **This section is the
+authority for how that reaches your machine** (`cli-and-automation.md` → *Staying current* explains why
+it works this way).
+
+### The channel
+
+| | |
+|---|---|
+| **The shared Drive folder** | **`KAPITA Second Brain`.** It holds `latest.json` (which release is current, and the archive's hash) and the archive itself |
+| **With Google Drive for desktop** | it is a local path, usually `G:\My Drive\KAPITA Second Brain`. **A check costs one file read, needs no network, and works offline** |
+| **Without it** | open <https://drive.google.com/drive/folders/1D79209rP34Gay9C7LOicFbbpVYcOxOdz>, download the newest `second-brain-<version>.zip`, unpack it, and install from there. ✅ **Byte-identical result** |
+| **The repository** | `github.com/Kapita-Research/second-brain-skill`, **private and for whoever maintains the skill.** ⛔ Nobody else needs an account, and the update path never touches it |
+
+### The three commands, and nothing else
+
+```bash
+python "<the shared folder>/install.py" --check   # is there a newer one? Silent when there is not
+python "<the shared folder>/install.py"           # a machine with nothing: the whole install
+python "<unpacked release>/tools/update.py"       # a machine that already has it: just the update
+```
+
+### How it behaves here
+
+**A scheduled routine runs the check once a day.** ⛔ **When nothing changed it says nothing at all.**
+When something did, it sends one message: the two version numbers, two or three lines from the top of
+the skill's `CHANGELOG.md`, and *"say **update the second brain** whenever it suits you."*
+
+🔴 **Nothing installs by itself, and that is mechanical rather than polite.** *A skill replaced while a
+conversation is open is not re-read by that conversation.* **The update takes seconds, nothing is
+unavailable meanwhile, and it takes effect in the next conversation.**
+
+### What it does to your vault
+
+| | |
+|---|---|
+| `KAPITA.md` | **replaced whole**, with your previous copy kept as `KAPITA.md.bak` |
+| **Templates, dashboards, property types** | **added to, never overwritten** |
+| ✅ **Your `CLAUDE.md` and every note you have written** | **never touched** |
+
+⛔ **So nothing personal goes in this file** — it is replaced on the next update and whatever was added
+disappears without a message.
+
+### When it does not work
+
+**Say *"run the second brain install check"* in a new conversation.** Every failing line prints the one
+thing to do about it. ⚠️ **Run it after an update too**, not only when something feels wrong.
+
+---
+
+## 10. Obsidian
 
 **Install it.** It is free, it opens your vault folder without changing anything, and at KAPITA Research it pays
 for itself on one feature: **open a client and see every note that mentions them, with nobody

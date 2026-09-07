@@ -14,6 +14,11 @@ step of cutting the release, and a release that fails to publish fails.
 
     latest.json                 release, archive name, sha256, date
     second-brain-<version>.zip  every file the manifest claims, at its own path
+    install.py                  the entry point, unzipped
+
+**`install.py` is copied in unzipped on purpose.** *Somebody with nothing installed cannot run a script
+that is inside an archive they have not unpacked*, so the one command they are given has to point at a
+file that is simply there.
 
 **`latest.json` is what a machine reads** - one small file, compared by version rather than by
 modification date. *A date changes when somebody re-uploads the same bytes and does not change when it
@@ -33,6 +38,7 @@ import hashlib
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import zipfile
@@ -124,6 +130,9 @@ def main():
 
     print("publishing to %s ..." % folder)
     name, path, h = build_archive(man, folder, version)
+    # install.py goes in unzipped, because it is the entry point: somebody with nothing installed
+    # has no way to run a script that is inside the archive they have not unpacked yet.
+    shutil.copy2(os.path.join(HERE, "install.py"), os.path.join(folder, "install.py"))
     meta = {"release": version, "zip": name, "sha256": h,
             "date": datetime.date.today().isoformat(),
             "size_kb": round(os.path.getsize(path) / 1024)}

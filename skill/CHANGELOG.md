@@ -2,6 +2,57 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.1 — 2026-09-07
+
+**One sentence installs the whole thing, and the skill now knows how it is kept current.**
+
+**The install was eleven steps, five of them outside the skill, and every one of them a place to stop.**
+*Most of the people receiving this are not developers* — and a checklist written for a person is a
+checklist that gets half done, on the machines least able to tell that it did. **So the checklist is now
+addressed to Claude**, and the person says one sentence and answers nothing.
+
+**`install.py` does everything a script defensibly can**, in one run: finds the release and **verifies
+its archive by hash before unpacking it**, creates the notes folder somewhere synced, scaffolds it,
+installs the skill and both root files with a hash check on every file that lands, merges the three
+hooks into `settings.json` and appends the standing block to the global `CLAUDE.md`, then runs the
+install check and prints it. ⛔ **It overwrites nothing that belongs to the person** — settings are
+merged and backed up, the block is appended only when absent, an existing vault is added to.
+
+> ### And it refuses to ask questions it can answer.
+> *Somebody who has not used this yet has no basis for choosing a folder layout*, and being asked turns
+> an install into a form. **The one genuinely personal thing — who they are and what they work on — is
+> deliberately left to the first conversation**, where it arrives as real notes rather than as answers.
+
+**Four things stay with Claude because a script cannot do them**: the daily update routine, the index of
+installed skills, the owner's own person note, and Obsidian. **The installer ends by naming them**, so
+they are not forgotten by whoever is driving.
+
+**The skill also learns what an update is** — `cli-and-automation.md` → *Staying current*. **Generic, and
+it names no company**: a release is identified by a **version and never by a modification date** (*a date
+says something changed, not that what you have is older, and it moves when the same bytes are uploaded
+again*); an **unverified or half-synced copy is reported as not ready rather than installed**; the check
+is cheap and **silent when nothing changed**, while the install is asked for. 🔴 **That last one is
+mechanical rather than polite: a skill replaced while a conversation is open is not re-read by it**, so an
+update applied behind somebody's back leaves them on the old copy while everything reports success.
+
+**And the layer carries the specifics**, which is what a layer is for: the folder, the link, the three
+commands, and what an update may touch — **the skill folder whole, the layer whole with a `.bak`, the
+scaffold additively, and ⛔ never a note or the vault's own `CLAUDE.md`.**
+
+**Touched:** `SKILL.md` (version, router) · `references/cli-and-automation.md` · the fork's
+`dist/CHECKLIST.md` (rewritten as a runbook addressed to Claude), `kapita-vault-KAPITA.md` (§9, *Updates*)
+and `tools/release.py` (publishes `install.py` unzipped — *somebody with nothing installed cannot run a
+script inside an archive they have not unpacked*). **Added:** `tools/install.py`. **Gate:** nine tests,
+the ninth running the whole install against a temporary HOME.
+
+**Tested:** a complete install into an empty machine — 96 skill files, a 25-file vault validating 0
+errors, four hooks, the standing block — and a second run over the top adding nothing. ⚠️ **The
+idempotence was not free:** the first version compared its hooks against `json.dumps()`, which escapes
+every quote the command contains, so it matched nothing and would have appended the same four hooks on
+every run.
+
+---
+
 ## 3.0 — 2026-09-06
 **A major number, and the reason is identity rather than size.** This is `obsidian-second-brain`
 2.17.0 with a fork's design on top of it: a **one-way exit** from the vault, a **`type: finding`** record

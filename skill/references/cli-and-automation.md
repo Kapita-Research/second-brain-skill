@@ -213,6 +213,61 @@ Every `type: meeting` note (any folder) contributes its date to each linked atte
 
 **Know its ceiling.** It can only see interactions the vault records. Relationships conducted over chat, email, or in person produce no meeting note, so those people keep an empty `last-contact` — that is a habit gap, not a bug, and no script closes it. Read a blank as "no recorded interaction," never as "neglected."
 
+## Staying current — receiving an update, and applying one
+
+**This skill is a folder of files on somebody's machine, so a fix reaches them only if something
+carries it there.** *When it is installed by hand, nothing does.* ⛔ **A machine nobody tells is a
+machine running last month's rules while everyone else has moved on, and the person on it has no way of
+knowing.**
+
+> ### If an organisation layer beside the vault `CLAUDE.md` defines a release channel, that is the
+> ### authority for where a release comes from and what the commands are. Follow it, and prefer it over
+> ### anything remembered.
+
+**What is true regardless of the channel**, and worth understanding rather than copying:
+
+### A release is identified by a version, never by a date
+
+⛔ **A modification date answers the wrong question.** It says *something changed*, not ***what I have is
+older than what is there***, and it moves when the same bytes are uploaded again. **Compare version
+numbers**, and keep the installed one written down somewhere the check can read cheaply.
+
+### An unverified copy is never installed
+
+**A release carries a hash of itself.** *A file that is still syncing, truncated, or half downloaded is
+a real and ordinary event*, and it must be reported as **not ready** rather than installed as though it
+were whole. ⛔ **One wrong hash and nothing at all is touched** - a half-applied update is worse than an
+old one, because it looks finished.
+
+### Checking is cheap and silent; installing is asked for
+
+| | |
+|---|---|
+| **The check** | runs on a schedule, reads one small file, and **says nothing at all when nothing changed.** *That silence is the feature* |
+| **The notification** | one message: the two version numbers, two or three lines of what changed, and how to take it |
+| **The install** | happens when the owner says so ⛔ **and never by itself** |
+
+> 🔴 **The reason is mechanical, not polite: a skill replaced while a conversation is open is not
+> re-read by that conversation.** *So an update applied behind somebody's back leaves the session they
+> are in running the old copy while everything reports success.* **It takes seconds, nothing is
+> unavailable meanwhile, and it takes effect in the next conversation** - say exactly that, so nobody
+> waits for a quiet moment that is not needed.
+
+### What an update may and may not overwrite
+
+| | |
+|---|---|
+| **The skill folder** | **replaced whole, and files the release retired are deleted.** *A copy-only update leaves a withdrawn file in place, looking valid* |
+| **An organisation layer** | replaced whole, with the previous copy kept beside it |
+| **The vault's own `CLAUDE.md`, and every note** | ⛔ **never touched.** They are the owner's |
+| **The scaffold** - templates, dashboards, property types | **added to, never overwritten.** An edited template and a disagreeing property type are decisions somebody made |
+
+### After it lands
+
+**Verify file by file, then run the install check and read it aloud in one line.** *A copy that reports
+success while silently skipping files is a thing that happens*, and the only defence is checking rather
+than trusting the copy.
+
 ## Mode reminder
 
 Operating Modes are defined once in SKILL.md → *Operating Modes*. The CLI-specific delta: the `obsidian` CLI and scheduled local runs exist **only** in Claude Code / Desktop; Cowork is file-tools-only; Chat gets copy-paste commands. Run `obsidian help` rather than guessing flags — the command set evolves.

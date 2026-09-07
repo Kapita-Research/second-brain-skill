@@ -12,7 +12,7 @@ description: >
   .base, search, web clipping, activity reporting, version history, recovering a deleted note. Do NOT use for
   general coding, or for files outside a vault.
 metadata:
-  version: "3.0"
+  version: "3.1"
   upstream_base: "obsidian-second-brain 2.17.0"
 ---
 
@@ -220,7 +220,7 @@ Read the **one or two** files relevant to the request. Do not load everything.
 | `references/money.md` | Money: funds, donations, expenses, transfers, debts/receivables, pledges, balances ("who owes me") |
 | `references/findings.md` | Findings: quoting a research number whole, base vs sample, comparability, superseding |
 | `references/capture-and-web.md` | Inbox capture, processing, **recording a session**, **bulk import** of a conversation or archive, dictated/transcribed input, web clipping, **following a link — a URL is an entry point, never a destination**, **surveying a folder or repo before importing it**, and **importing a whole past conversation from its transcript**, and **indexing the skills already installed on the machine as pointers** |
-| `references/cli-and-automation.md` | Obsidian CLI commands, scheduled recaps, the live dashboard server, automation (Code/Desktop) |
+| `references/cli-and-automation.md` | Obsidian CLI commands, scheduled recaps, the live dashboard server, automation (Code/Desktop), **and receiving or applying an update to this skill** |
 | `references/version-history.md` | OPTIONAL: git version history — "what did I work on", recovering deleted content, revision tracking, automated snapshots |
 | `references/community-plugins.md` | OPTIONAL: Dataview, Templater, Tasks syntax (only if user uses them) |
 | `references/sharing-and-export.md` | OPTIONAL: handing a note to an organisation, exporting, team tools, backup. **"Publish this" is routed here** |
