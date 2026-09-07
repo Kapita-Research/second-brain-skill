@@ -148,6 +148,16 @@ def main():
         print("The tag is pushed. Fix the folder before telling anybody.")
         return 1
 
+    # Keep the current release and the one before it, and remove the rest. Thirteen people open
+    # this folder; a list of ten archives is a question about which one is right.
+    old = sorted((f for f in os.listdir(folder)
+                  if f.startswith("second-brain-") and f.endswith(".zip") and f != name),
+                 key=lambda f: os.path.getmtime(os.path.join(folder, f)), reverse=True)
+    for stale in old[1:]:
+        os.remove(os.path.join(folder, stale))
+    if old[1:]:
+        print("removed %d older archive(s), kept %s" % (len(old[1:]), old[0]))
+
     print("published %s (%d KB) and latest.json - verified by reading them back." % (name, meta["size_kb"]))
     print("\nReleased %s." % tag)
     print("Every machine's daily check will offer it within a day. Nothing installs by itself.")
