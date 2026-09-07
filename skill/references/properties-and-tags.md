@@ -169,6 +169,30 @@ The skill's assignment ships as `assets/types.json` (bootstrap installs it). Rul
 
 > **`assignee` ≠ `owner` ≠ `people`.** `assignee` = who is responsible for doing a task; `people` = everyone involved/mentioned; `owner` = who drives an engagement / whose money a fund is. Three properties, three meanings — never merge them.
 
+### 🔴 Adding is free. Shadowing and near-duplicating are not
+
+**A new property is welcome when it carries a meaning none of the declared ones carries.** *That is why
+`assignee`, `owner` and `people` exist as three names: three real distinctions, and merging them would
+lose information.*
+
+⛔ **What fails is a new name used *instead of* an existing one.** *A training note that records who
+was there in `attendees` and leaves `people` empty has not added a field, it has hidden itself:* **every
+search that asks by `people` now misses it, and nobody will know why.** **Fill the declared property,
+and let the new one narrow it.**
+
+> ### And before adding a value to a controlled vocabulary, read the values that are already in it.
+>
+> ⛔ **If one of them means the same thing in different words, use it.** *`planned` and `planning` are
+> not two states; they are one state and a typo with a longer life.* **A board grouped by `status` shows
+> them as two columns, with half the work in each, and nothing anywhere says they are the same.**
+>
+> ⚠️ **Registering the new value in the vault's `CLAUDE.md` makes it legal, not correct** - and it
+> silences the validator, which was the one thing that would have told you.
+
+**The test is not "is this new?" - adding a `type` or a property is ordinary.** The test is: ⛔ **would a
+reader looking at both be able to say why this is not that?** *If not, there is one of them, and it
+already exists.*
+
 ## Controlled `type` values
 
 Every note declares exactly one:
