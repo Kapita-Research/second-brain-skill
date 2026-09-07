@@ -248,6 +248,15 @@ def main(argv):
             check(False, "  ...and a release is recorded", "second-brain-release.json will not parse",
                   "run: python tools/update.py", required=False)
 
+    # 11e - the firm's publishing rules, where every conversation reads them. The layer itself is
+    #       only read when the vault is, so a deck built in another folder never sees them.
+    gmd = read(os.path.join(CLAUDE_DIR, "CLAUDE.md"))
+    check("second-brain:publishing-rules" in gmd, "Publishing rules in ~/.claude/CLAUDE.md",
+          "present" if "second-brain:publishing-rules" in gmd else "",
+          "run the updater once: python tools/update.py. It copies the short form out of KAPITA.md "
+          "into your global CLAUDE.md between markers, and refreshes it on every update - without it "
+          "the rule only applies in conversations that happen to open the vault")
+
     # 12..14 - Obsidian
     app = None
     for p in (os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "Obsidian"),

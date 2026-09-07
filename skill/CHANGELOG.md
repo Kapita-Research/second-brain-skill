@@ -2,6 +2,32 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.2 — 2026-09-07
+
+**An organisation layer is only read when the vault is, and that is not where most writing happens.**
+*A deck built in another folder, a post drafted through somebody's own writing skill, an email written
+inside a code project* — none of them open it. ⛔ **So a rule about what may leave the vault was
+unreachable in exactly the conversations that produce the things which leave it.**
+
+**A layer can now carry a short form of such a rule in a fenced block, and the updater copies it into
+`~/.claude/CLAUDE.md` between markers** — the one file read at the start of every conversation in every
+folder — **and refreshes it on every update.** Everything outside the markers is left exactly as it was.
+
+> **The layer stays the one writer.** *The copy is generated*, so editing the copy is editing something
+> that will be overwritten without a message, and the block says so.
+
+⚠️ **Measured before deciding, because the gap was bigger than it looked.** Of twelve installed skills,
+**two carry the firm's publishing rule** — and the nine that actually produce text **contain between 13
+and 30 em-dashes each in their own instructions.** *A model imitates the register of what it is reading*,
+so those files were teaching the habit by example while a rule elsewhere forbade it. **This closes the
+reachability half of that. The example half is a separate decision**, and it turns on whether those
+skills join a distribution channel at all.
+
+**Touched:** `SKILL.md` (version) · `kapita-vault-KAPITA.md` (§2 gains the short form and says where it
+goes) · `tools/update.py` (`sync_global_block`) · `tools/check-install.py` (a line for it).
+
+---
+
 ## 3.1.1 — 2026-09-07
 
 **The installer crashed on a machine that had never run Claude Code.** Writing the release-state file

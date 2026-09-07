@@ -77,6 +77,30 @@ an email, a proposal, a methodology note, an article. **Arabic and English alike
 ⚠️ **Not these notes.** *Your vault is a working record and its markers earn their place.*
 ⛔ **The line is the vault's edge ─ the moment text leaves, the furniture comes off.**
 
+### And it has to be readable where the writing actually happens
+
+⛔ **This file is only read when the vault is.** *A deck built in another folder, a post drafted
+through somebody's own writing skill, an email written in a code project — none of them open it*, which
+is exactly where the rule was being lost.
+
+**So the short form below is installed into `~/.claude/CLAUDE.md`**, which is read at the start of every
+conversation in every folder, and **refreshed from here on every update**. ⛔ **Edit it here and nowhere
+else** — the copy is generated, and anything written into the copy is overwritten without a message.
+
+```markdown
+## Nothing KAPITA Research publishes may read as machine-written
+
+No em-dash or en-dash: a comma, a full stop, a colon or brackets instead. No arrows, no middle dots, no
+decorative bullets, no emoji marking sections, no checkmarks in tables. None of the furniture that now
+signals a machine wrote the page. Arabic and English alike.
+
+This covers everything a person outside my vault reads: a report, a brief, a deck, a dashboard label, a
+post, an email, a proposal, an article. It does not cover my own notes, which are a working record.
+
+The firm sells credibility, and a client who reads a paragraph and thinks "this was generated" stops
+weighing the finding and starts weighing whether anybody checked it.
+```
+
 ---
 
 ## 3. Sharing

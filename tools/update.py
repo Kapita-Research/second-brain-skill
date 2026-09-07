@@ -43,6 +43,8 @@ import sys
 import tempfile
 import zipfile
 
+NL = chr(10)
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
 HOME = os.path.expanduser("~")
@@ -190,6 +192,45 @@ def mirror(src, dst, manifest_files, prefix):
     return copied, removed
 
 
+MARK_OPEN = "<!-- second-brain:publishing-rules -->"
+MARK_CLOSE = "<!-- /second-brain:publishing-rules -->"
+
+
+def sync_global_block(layer_path):
+    """Put the organisation's publishing rules where every conversation reads them.
+
+    An organisation layer is only read when the vault is. A deck built in another folder, a post
+    drafted through a personal writing skill, an email written inside a code project - none of them
+    open it, and that is exactly where a rule about what may leave the vault stops being applied.
+
+    So the layer carries a short form of it in a ```markdown fence, and that form is copied into
+    ~/.claude/CLAUDE.md between markers and refreshed on every update. The layer stays the one writer;
+    the copy is generated, and everything outside the markers is left exactly as it was.
+    """
+    t = read(layer_path)
+    m = re.search(r"```markdown" + NL + r"(.*?)```", t, re.S)
+    if not m or not m.group(1).strip():
+        return None
+    block = m.group(1).strip()
+
+    body = NL.join([MARK_OPEN, block, MARK_CLOSE]) + NL
+    g = os.path.join(CLAUDE_DIR, "CLAUDE.md")
+    old = read(g)
+    if MARK_OPEN in old and MARK_CLOSE in old:
+        head, rest = old.split(MARK_OPEN, 1)
+        _, tail = rest.split(MARK_CLOSE, 1)
+        new = head + body + tail.lstrip(NL)
+        what = "refreshed"
+    else:
+        new = old + ((NL * 2) if old.strip() else "") + body
+        what = "added"
+    if new == old:
+        return "already current"
+    os.makedirs(CLAUDE_DIR, exist_ok=True)
+    io.open(g, "w", encoding="utf-8", newline=NL).write(new)
+    return what
+
+
 def install(root, vault, skills_dir, run_checks):
     """Install the release unpacked at `root`. Returns an exit code."""
     man = load_json(os.path.join(root, "MANIFEST.json"))
@@ -232,6 +273,9 @@ def install(root, vault, skills_dir, run_checks):
             shutil.copy2(src, dst)
             print("  %s -> %s" % (e["source"], dst))
             installed.append((e["source"], dst))
+            what = sync_global_block(dst)
+            if what:
+                print("  publishing rules in ~/.claude/CLAUDE.md: %s" % what)
         elif e["rule"] == "create-if-missing":
             if os.path.exists(dst):
                 print("  %s already there, left alone (it is yours)" % os.path.basename(dst))
