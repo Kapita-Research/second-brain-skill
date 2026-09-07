@@ -26,7 +26,6 @@ import json
 import os
 import re
 import sys
-import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -99,9 +98,11 @@ def build():
             unclaimed.append(rel)
             continue
         files[rel] = sha(os.path.join(ROOT, rel))
+    # No timestamp. A generated-at field changes on every run, so regenerating would dirty the
+    # tree every time and `release.py`, which refuses a dirty tree, could never run at all.
+    # The release number and the hashes are the whole content; nothing else belongs here.
     return {
         "release": version(),
-        "generated": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "entries": [{"source": s, "rule": r, "dest": d} for s, r, d in ENTRIES
                     if os.path.exists(os.path.join(ROOT, s))],
         "files": files,

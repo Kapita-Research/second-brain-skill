@@ -52,9 +52,11 @@ STATE = os.path.join(CLAUDE_DIR, "second-brain-release.json")
 NOTICE = os.path.join(CLAUDE_DIR, "second-brain-update.json")
 CONFIG = os.path.join(CLAUDE_DIR, "second-brain-source.json")
 
-# Where Google Drive for desktop puts a shared folder, per platform. The folder name is the
-# firm's; the rest is the app's own layout.
+# The shared folder a release is published to. The name is what Google Drive for desktop mounts
+# it as; the link is what a machine without the app is pointed at instead. Both live here rather
+# than in per-machine config so that every clone and every archive already knows them.
 FOLDER = "KAPITA Second Brain"
+FOLDER_URL = "https://drive.google.com/drive/folders/1D79209rP34Gay9C7LOicFbbpVYcOxOdz"
 
 
 def sha(path):
@@ -87,6 +89,7 @@ def config():
 def drive_dir():
     """The shared folder, from the config file or by looking where the Drive app puts things."""
     c = config().get("drive_dir")
+    name = config().get("folder_name", FOLDER)
     if c and os.path.isdir(c):
         return c
     roots = []
@@ -100,12 +103,12 @@ def drive_dir():
     for r in roots:
         if not os.path.isdir(r):
             continue
-        cand = os.path.join(r, FOLDER)
+        cand = os.path.join(r, name)
         if os.path.isdir(cand):
             return cand
         try:                                   # one level in, for Shared drives / CloudStorage
             for d in os.listdir(r):
-                cand = os.path.join(r, d, FOLDER)
+                cand = os.path.join(r, d, name)
                 if os.path.isdir(cand):
                     return cand
         except OSError:
@@ -274,7 +277,7 @@ def install(root, vault, skills_dir, run_checks):
 
 def no_drive_message(release, folder_missing=True):
     """What to tell the owner when a release exists and this machine cannot reach the folder."""
-    url = config().get("drive_url") or "the shared Drive folder"
+    url = config().get("drive_url") or FOLDER_URL
     print("")
     print("Release %s is available, and this machine cannot see the shared folder." % release)
     if folder_missing:
@@ -283,7 +286,8 @@ def no_drive_message(release, folder_missing=True):
     print("Two ways forward, and the first one is worth doing once:")
     print("  1. Install Google Drive for desktop and let it sync %s." % FOLDER)
     print("     After that every update is automatic and costs nothing.")
-    print("  2. Open %s in a browser, download the archive," % url)
+    print("  2. Open this in a browser and download the newest archive:")
+    print("     " + url)
     print("     and run:  python tools/update.py --from-zip \"<the file you downloaded>\"")
     print("")
     print("Nothing was changed.")
