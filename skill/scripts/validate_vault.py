@@ -81,7 +81,7 @@ def main():
             continue
         text = p.read_text(encoding="utf-8", errors="replace")
         # Convention files live at the vault root and are not notes: CLAUDE.md (the owner's)
-        # and any organisation layer beside it (KAPITA.md, ACME.md - see SKILL.md rule 2a).
+        # and any organisation layer beside it (ACME.md, TEAM.md - see SKILL.md rule 2a).
         # No note belongs at the root, so depth is the test rather than a list of names.
         # They are documentation, and their prose carries illustrative `[[wikilinks]]` that
         # are examples rather than references - so they are skipped entirely, not stored.

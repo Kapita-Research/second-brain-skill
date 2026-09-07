@@ -267,6 +267,44 @@ def t_full_install():
                            else os.linesep.join(bad))
 
 
+@test("10 - the skill names no company and no colleague")
+def t_generic():
+    """The skill is standalone and shareable; the layer is where the firm lives.
+
+    This is not a matter of taste. A skill that names the firm cannot be handed to a friend, and a
+    skill that carries a colleague's full name, employer and job title as a worked example has put a
+    real person into a file that travels. The names are read from the layer's own roster, so the check
+    follows the roster rather than a list that goes stale beside it.
+    """
+    layer = io.open(os.path.join(ROOT, "kapita-vault-KAPITA.md"), encoding="utf-8").read()
+    # Only the roster table: a bolded phrase followed by the Arabic spelling. Matching every bold
+    # run in the file pulled in ordinary sentences like "The repository" and failed on them.
+    names = set()
+    for line in layer.splitlines():
+        m = re.match(r"\|\s*\*\*([^*]+)\*\*\s*.\s+[؀-ۿ]", line)
+        if m and " " in m.group(1):
+            names.add(m.group(1).strip())
+    names.add("KAPITA")
+    hits = []
+    for b, dirs, fs in os.walk(SKILL):
+        dirs[:] = [d for d in dirs if d != "__pycache__"]
+        for f in fs:
+            fp = os.path.join(b, f)
+            try:
+                t = io.open(fp, encoding="utf-8", errors="replace").read()
+            except OSError:
+                continue
+            for n in names:
+                if n in t:
+                    rel = os.path.relpath(fp, ROOT).replace(chr(92), "/")
+                    line_no = t[:t.index(n)].count(chr(10)) + 1
+                    hits.append("%s:%d  %s" % (rel, line_no, n))
+    if hits:
+        return False, ("the skill is meant to name no company and no colleague:" + os.linesep +
+                       os.linesep.join("  " + h for h in sorted(set(hits))[:12]))
+    return True, "clean - %d names checked across the skill" % len(names)
+
+
 def extra_types(claude_md):
     """A vault may register its own type and status names; the validator has to be told."""
     out = []

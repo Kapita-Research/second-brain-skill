@@ -2,6 +2,62 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.3 — 2026-09-07
+
+**The four evals that had only ever been specifications were run, and one of them failed.**
+
+**Three passed on the first attempt** - a personal note refused entry to the shared folder while the
+project note beside it moved and had its `domain` changed; a research figure returned whole to a
+one-line question, with its base of 340 rather than the study's 1,200 and both of its dates; an
+ambiguous name answered by naming both readings rather than silently picking one. **All three checked
+against the files on disk rather than against the reply.**
+
+**The fourth turned out to be measuring the wrong thing, twice over.** *Its request asked for a new
+type to be created but gave nothing to record*, so the only honest output was a shape, and the model
+duly invented a status word for a thing that had not happened yet - `planned` on one run and
+`scheduled` on the next, **when `planning` and `not-started` were already in the vocabulary**. ⚠️ **Given
+one real session, the invention stopped**: the note was written, the type was right, and no new status
+appeared. **The empty case had been producing the pathology.**
+
+### 🔴 What it did find, and what fixes it
+
+**Every person involved goes in `people`, in every note, and a role field is a subset of it.** *Three
+runs recorded who was present in `attendees` and left `people` empty* - **so the session existed in the
+vault and was invisible to every search for that person, with nothing anywhere to say why.**
+
+```yaml
+people:     ["[[Sarah Chen]]", "[[Omar Haddad]]"]   # everyone, always
+trainer:    ["[[Omar Haddad]]"]                     # and which of them did what
+attendees:  ["[[Sarah Chen]]"]
+```
+
+**Golden Rule 3 carries it now, extended in place rather than renumbered.** *The same rule had been
+written into `properties-and-tags.md` an hour earlier and was read and ignored* - **a reference file is
+consulted while writing fields, not while deciding what to do.** **After the move, the next run filled
+`people` and the role fields beside it.**
+
+**And before adding a value to a controlled vocabulary, read what is in it.** ⛔ *`planned` and
+`planning` are not two states.* **Registering the new one in the vault's `CLAUDE.md` makes it legal, not
+correct** - and silences the validator, which was the one thing that would have said so.
+
+### The skill no longer names anybody
+
+⛔ **It was carrying a colleague's full name, employer and job title as a worked example**, two more
+colleagues as transliteration examples, and the maintainer's own organisation in four other places -
+**one of them added the same day, in a section about not copying things out of skills.**
+
+**Test 10 now reads the names out of the organisation layer's own roster and fails if any of them, or
+the organisation's name, appears anywhere under `skill/`.** *It follows the roster rather than a list
+kept beside it*, and it was verified by planting a leak and watching it fail.
+
+> **The examples lost nothing.** *`Hussein` / `Hussain` / `Husain` is the same three-spelling lesson*,
+> and a single common given name still shows what normalisation does and does not fix. **A first name
+> teaches it; a full name with an employer identifies somebody.**
+
+**Touched:** `SKILL.md` (Golden Rule 3, version) · `references/{properties-and-tags,capture-and-web,retrieval-and-review}.md` · `scripts/{crawl,validate_vault}.py` · `evals/evals.json` (four expectations rewritten to measure what they meant; the fork's four ids were strings while the eighteen upstream ones were integers). **Gate:** ten tests.
+
+---
+
 ## 3.2 — 2026-09-07
 
 **An organisation layer is only read when the vault is, and that is not where most writing happens.**
@@ -23,7 +79,7 @@ so those files were teaching the habit by example while a rule elsewhere forbade
 reachability half of that. The example half is a separate decision**, and it turns on whether those
 skills join a distribution channel at all.
 
-**Touched:** `SKILL.md` (version) · `kapita-vault-KAPITA.md` (§2 gains the short form and says where it
+**Touched:** `SKILL.md` (version) · the fork's organisation layer (§2 gains the short form and says where it
 goes) · `tools/update.py` (`sync_global_block`) · `tools/check-install.py` (a line for it).
 
 ---
@@ -85,7 +141,7 @@ commands, and what an update may touch — **the skill folder whole, the layer w
 scaffold additively, and ⛔ never a note or the vault's own `CLAUDE.md`.**
 
 **Touched:** `SKILL.md` (version, router) · `references/cli-and-automation.md` · the fork's
-`dist/CHECKLIST.md` (rewritten as a runbook addressed to Claude), `kapita-vault-KAPITA.md` (§9, *Updates*)
+`dist/CHECKLIST.md` (rewritten as a runbook addressed to Claude), the fork's organisation layer (§9, *Updates*)
 and `tools/release.py` (publishes `install.py` unzipped — *somebody with nothing installed cannot run a
 script inside an archive they have not unpacked*). **Added:** `tools/install.py`. **Gate:** nine tests,
 the ninth running the whole install against a temporary HOME.
@@ -143,7 +199,7 @@ name costs nothing; a reused name with a new meaning breaks every view built on 
 one is reported as an **error** on notes that were written correctly. Ordinary fields need no entry.
 
 **Rule 2a — an organisation layer, read but never written.** A vault belonging to someone in an
-organisation carries a second root file (`KAPITA.md`, `ACME.md`, `TEAM.md`) holding the shared rules
+organisation carries a second root file (`ACME.md`, `TEAM.md`) holding the shared rules
 everyone there follows, distributed to every member and **replaced wholesale on update**. `CLAUDE.md`
 stays the owner's alone, and nothing replaces it. **The organisation's file governs shared vocabulary
 and sharing rules; `CLAUDE.md` governs how that person works.** The split is what makes the shared half
@@ -168,7 +224,7 @@ than as "it's optional", which leaves someone turning down something they cannot
 carries the *presentation form* of an Arabic letter and shares no trigram with the same word typed, so
 every later step fails without it. Then diacritics, alef and yaa/taa-marbuta variants, tatweel, and
 digits. ⛔ **`چ گ پ ڤ` are never folded** — they are distinct letters in Kurdish and Persian, not
-variants. **And normalisation cannot fix Latin transliteration** — `Najem` / `Najim` / `Najam` share no
+variants. **And normalisation cannot fix Latin transliteration** — `Hussein` / `Hussain` / `Husain` share no
 normal form. That is what `aliases` is for, which is also why **an alias must be unique across the
 vault**: a shared name registered on one person creates an ambiguity nothing can catch. **Filenames stay
 English and every other spelling goes in `aliases`, transliterated rather than translated** — a

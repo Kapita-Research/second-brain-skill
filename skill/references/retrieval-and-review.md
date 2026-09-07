@@ -54,7 +54,7 @@ Never load the whole vault. Climb only as far as you need:
 > ❌ *"There is nothing in the vault about this."*
 
 
-**You already know that `عصام` is `Essam Munir`, that `آيه` is `آية`, that `Najim` is `Najem`. Use that.** ⛔ **Do not wait to find a variant in an `aliases` list before trying it** — the list is what a *machine* consults; you generate the forms yourself and are better at it than any list will be.
+**You already know that `عصام` is `Essam`, that `آيه` is `آية`, that `Hussain` is `Hussein`. Use that.** ⛔ **Do not wait to find a variant in an `aliases` list before trying it** — the list is what a *machine* consults; you generate the forms yourself and are better at it than any list will be.
 
 **So before step 1:**
 
@@ -65,7 +65,7 @@ Never load the whole vault. Climb only as far as you need:
 
 > 🔴 **`grep` is literal, and an Arabic word written two ordinary ways does not match itself.** **A single-form search returning nothing is not evidence of absence** — it is evidence that one spelling was not present.
 
-**This is why *say what you searched* matters mechanically, not just politely:** *"I searched titles, aliases and full text for `عصام`, `عصام منير` and `Essam Munir` and found nothing"* is a real answer. **"I found nothing" is not.**
+**This is why *say what you searched* matters mechanically, not just politely:** *"I searched titles, aliases and full text for `عصام`, `عصام حسين` and `Essam Hussein` and found nothing"* is a real answer. **"I found nothing" is not.**
 
 ## Search operators (core Search plugin)
 

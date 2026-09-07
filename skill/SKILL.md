@@ -12,7 +12,7 @@ description: >
   .base, search, web clipping, activity reporting, version history, recovering a deleted note. Do NOT use for
   general coding, or for files outside a vault.
 metadata:
-  version: "3.2"
+  version: "3.3"
   upstream_base: "obsidian-second-brain 2.17.0"
 ---
 
@@ -32,7 +32,7 @@ A single skill for running an Obsidian vault as a **second brain** through Claud
 1. **Find the vault** — a mounted folder (Cowork), a shell at the vault root (Claude Code), or no file access (Chat). This sets your Operating Mode (below).
 2. **Read the vault's `CLAUDE.md`** (vault root) if it exists. It is the owner's source of truth and **overrides this skill's defaults** — folder names, vocabulary extensions, workflows, and personal context live there, never in this skill. Re-check it before proposing anything structural.
 2b. ⛔ **Never write a placeholder for a fact about the owner.** `[your name]`, `[your title]`, `[your email]`, `[insert role]` — in an email, a bio, a form, a README, anywhere. **The owner has a person note in `People/` (usually `Me.md`): it carries their name and its spellings, title, employer and addresses, and it links out to their projects, the people they deal with and what was decided.** Read it, follow the links that bear on what you are writing, and **search the vault for the rest — reading one note is not looking.** **If a fact is genuinely not there, ask one question, and never infer it from an org chart, a table or a filename** — *a placeholder in a finished draft is a defect, not a courtesy*, and the owner is the one person the vault is guaranteed to know about.
-2a. **And read any other convention file beside it** — a vault belonging to someone in an organisation often carries a second file at the root (`KAPITA.md`, `ACME.md`, `TEAM.md`) holding **the shared rules everyone there follows**, distributed to every member and **replaced wholesale on update**. ⛔ **Never edit that file and never write the owner's personal conventions into it** — those belong in `CLAUDE.md`, which is theirs alone. **Where the two disagree, the organisation's file governs shared vocabulary and sharing rules; `CLAUDE.md` governs everything about how this person works.** The split exists so the shared half can be updated without touching the personal half.
+2a. **And read any other convention file beside it** — a vault belonging to someone in an organisation often carries a second file at the root (`ACME.md`, `TEAM.md`) holding **the shared rules everyone there follows**, distributed to every member and **replaced wholesale on update**. ⛔ **Never edit that file and never write the owner's personal conventions into it** — those belong in `CLAUDE.md`, which is theirs alone. **Where the two disagree, the organisation's file governs shared vocabulary and sharing rules; `CLAUDE.md` governs everything about how this person works.** The split exists so the shared half can be updated without touching the personal half.
 3. **No `CLAUDE.md`?** If the vault already has a structure, adapt to it (Golden Rules still apply) and offer to write a `CLAUDE.md` capturing its conventions. If the vault is empty or brand-new, follow `references/onboarding.md` — **a first session that reads as someone taking their notes, not as configuring a tool.** Ask about their week and their work, **write notes as they talk**, and let the scaffold (`scripts/bootstrap_vault.py`) and the vault's `CLAUDE.md` follow from what they actually said. ⛔ **Never announce a setup, and never narrate the machinery.**
 
 ---

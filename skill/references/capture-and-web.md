@@ -208,8 +208,8 @@ depth, word count, how many links it found, the title, and the first hundred cha
 
 ```
 #   depth words  links title / url / first words
-1   0     1840   37    Murtadha Najem - LinkedIn
-                       Data Engineer and Market Researcher at KAPITA Research...
+1   0     1840   37    Sarah Chen - LinkedIn
+                       Head of Research at Uruk Technology, and before that...
 ```
 
 > ## **Read the manifest, decide, then open only the files worth opening.**
@@ -534,9 +534,9 @@ a skill nobody uses.
 of a skill and into a note.* **C15 - one writer of truth.** The skill is maintained; the copy is not,
 and the copy is what gets read six months later when it is wrong.
 
-**One line per skill: the name, what it owns, and the path.** *"`kapita-presentations` - decks, the
-design system and the colour tokens - `~/.claude/skills/kapita-presentations/`"* is the whole entry.
-**If a reader needs the actual token, the note has told them which file to open.**
+**One line per skill: the name, what it owns, and the path.** *"`slide-decks` - decks, the design
+system and the colour tokens - `~/.claude/skills/slide-decks/`"* is the whole entry. **If a reader needs
+the actual token, the note has told them which file to open.**
 
 ### Running it
 
@@ -569,7 +569,7 @@ Voice-dictated and machine-transcribed input (meeting recaps, voice notes — an
 
 ### Matching names across scripts
 
-**You do not need a rule to see that `آية` and `آيه` are the same name, or that `Najem` and `Najim` are
+**You do not need a rule to see that `آية` and `آيه` are the same name, or that `Hussein` and `Hussain` are
 one person. Read the question and you know.** ⛔ **So do not ask the owner which spelling is "right",
 and do not treat a variant as an obstacle.**
 
@@ -597,7 +597,7 @@ A mismatch between the two is invisible: nothing errors, matches just quietly st
 > ⛔ **Never fold `چ گ پ ڤ`.** They are distinct letters in Iraqi, Persian and Urdu — چاي is not جاي —
 > and folding them merges unrelated words.
 
-> ⚠️ **Normalisation does not fix Latin transliteration.** *Najem*, *Najim* and *Najam* stay three
+> ⚠️ **Normalisation does not fix Latin transliteration.** *Hussein*, *Hussain* and *Husain* stay three
 > different strings, because they differ in a vowel letter rather than in a form of the same letter.
 > **Only `aliases` solves that** — which is why step 4 matters more than it looks: **seed every spelling
 > anyone actually uses.**

@@ -8,7 +8,7 @@ not. Twenty pages can cost a hundred thousand tokens to learn that three were re
 This fetches, strips each page to readable text, **writes it to a file**, and prints one line per page:
 
     #  depth  words  links  title                              first words of the text
-    1  0       1840     37  Murtadha Najem - LinkedIn          Data Engineer and Market Researcher...
+    1  0       1840     37  Sarah Chen - LinkedIn              Head of Research at Uruk Technology...
 
 **Read the manifest, decide, then open only the files worth opening.** Thirty pages cost roughly five
 hundred tokens to triage instead of tens of thousands to read.
