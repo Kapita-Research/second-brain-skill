@@ -175,6 +175,25 @@ The skill's assignment ships as `assets/types.json` (bootstrap installs it). Rul
 `assignee`, `owner` and `people` exist as three names: three real distinctions, and merging them would
 lose information.*
 
+### 🔴 People: everyone in `people`, and roles as subsets of it
+
+**Whatever the note is, every person involved goes in `people`.** *Then, if the parts they played differ
+enough to ask about separately, add a role field beside it:*
+
+```yaml
+people:     ["[[Sarah Chen]]", "[[Omar Haddad]]", "[[Dana Kim]]"]   # everyone, always
+trainer:    ["[[Omar Haddad]]"]                                    # subsets, naming what each did
+attendees:  ["[[Sarah Chen]]"]
+logistics:  ["[[Dana Kim]]"]
+```
+
+**Every name in a role field appears in `people` too.** *`people` answers "does this note involve them at
+all", which is the question the whole vault is built to answer; the role field answers "as what".*
+
+⛔ **The failure is filling only the role field.** *A training session whose attendees live in
+`attendees` and whose `people` is empty does not exist as far as that person's backlinks are concerned* -
+**and the note looks perfectly fine while it happens.**
+
 ⛔ **What fails is a new name used *instead of* an existing one.** *A training note that records who
 was there in `attendees` and leaves `people` empty has not added a field, it has hidden itself:* **every
 search that asks by `people` now misses it, and nobody will know why.** **Fill the declared property,

@@ -151,29 +151,35 @@ aliases: [Essam Munir, Essam, عصام منير, عصام]
 
 ### The roster — facts only
 
-⛔ **Nothing here is an assessment of anybody.** Name, title, degree, and what they do. **Judgements
+⛔ **Nothing here is an assessment of anybody.** Name, the Arabic spelling, address, and role — **what the skill needs to write to somebody and to spell them right.** **Judgements
 about colleagues are a different type in a different folder and never go in this file.**
 
-| Name · العربية | Email | Role | Education |
-|---|---|---|---|
-| **Mohammed Jamal** · محمد جمال | `m.jamal@kapita.iq` | **CEO** — from the parent company before the split, and **the approver for access to closed projects** | Royal Holloway, University of London · **a physician, College of Medicine, University of Baghdad** |
-| **Essam Munir** · عصام منير | `essam@kapita.iq` | Senior Market Researcher | **MBChB, University of Baghdad College of Medicine, 2013–2019** · MBA, One League 2022–2023. **Still practises — a neurologist in training** |
-| **Moamin Al-Kakaei** · مؤمن الككائي | `moamin@kapita.iq` | Senior Market Researcher | **MSc, Drug Discovery and Development** · PhD student, Uppsala University. **Based in Sweden** |
-| **Yousif Ahmed** · يوسف أحمد | `yousif.ahmed@kapita.iq` | Market Researcher — **called "Dr. Yousif"** | **MBBS, University of Baghdad** · MBA, One League 2026–2028, data-science and generative-AI track |
-| **Yousif Al-Shaikhli** · يوسف الشيخلي | `yousif.alshaikhali@kapita.iq` | Data Analyst & Technology Officer | **Pharmacy, Al Turath University, Dec 2024 – Jun 2030** — in progress |
-| **Murtadha Najem** · مرتضى نجم | `murtadha.najem@kapita.iq` | Data Engineer & Market Researcher | **B.Sc. Information & Communication Engineering, Al-Nahrain University, 2022–2026** |
-| **Mohammed Mustafa** · محمد مصطفى عمران | `m.mustafa@kapita.iq` | Internal Development Consultant | BBA, Management Information Systems · American University of Iraq – Baghdad |
-| **Mohammed Hayder** · محمد حيدر | `m.hayder@kapita.iq` | Field Researcher | **MBBS, University of Baghdad, 2019–2025** — qualified 2025 |
-| **Ammar Jalel** · عمار جليل | `ammar.jalel@kapita.iq` | **Creative Lead** — has designed the firm's reports and magazines since 2023 | **Bachelor's, general medicine, College of Medicine Baghdad, 2014–2021** |
-| **Aya Salam** · آية سلام | `aya.salam@kapita.iq` | Business Development Lead — **from the parent company, before the split** | ⚠️ *dentistry graduate* per the firm's bio; **no institution or dates published** |
-| **Athar Hakeem** · آثار حكيم | `athar.hakeem@kapita.iq` | Project Coordinator — **began in aviation as an Airworthiness Planning Engineer** | **Aeronautical Engineering, University of Baghdad** · **reading for a master's in the same field there, second year** |
-| **Fatima Suhail** · فاطمة سهيل | `fatima.suhail@kapita.iq` | Marketing Executive — **an urban-planning engineer** | University of Kufa · **accepted at the University of Baghdad for a master's in urban-planning engineering, starting 2026** |
-| **Ameer Loay** · أمير لؤي | `ameer.loay@kapita.iq` | **Field Operations Supervisor** — promoted through the field ladder here: Junior Research Analyst → Field Researcher → Supervisor | Senior Pharmacy student, American University of Iraq – Baghdad |
-| **Assim Anas** · عاصم أنس | `assim.anas@kapita.iq` | Market Researcher | **Bachelor's, Entrepreneurship, American University of Iraq – Baghdad, 2022–2026.** Joined June 2026 |
-| **Fatimah Oday** · فاطمة عدي | `fatimah.oday@kapita.iq` | Junior Market Researcher | not published |
-| **Mafaz Al-Kubaisi** · مفاز الكبيسي | — | **Research Intern** | **Economics & Mathematics, NYU Abu Dhabi** — in progress |
-| **Payam Sherzad** · بيام شيرزاد | — | **Political Analyst & Field Researcher** — Iraq, the KRI and Iran · multilingual | not published |
-| **Ali Al-Saedi** · علي الساعدي | — | not published — LinkedIn headline reads *"Pharmacy, Research, Business and Leadership"* | not published |
+> ⚠️ **Degrees are deliberately not here.** *Nothing the skill does needs them*, and a single file
+> listing everybody's university and years, copied to fifteen machines, is a compiled record nobody
+> agreed to. **What you know about a colleague belongs in their note in your own vault**, which is
+> where it already is. **The one exception is below**, because it prevents a wrong name rather than
+> describing a person.
+
+| Name · العربية | Email | Role |
+|---|---|---|
+| **Mohammed Jamal** · محمد جمال | `m.jamal@kapita.iq` | **CEO** — from the parent company before the split, and **the approver for access to closed projects** |
+| **Essam Munir** · عصام منير | `essam@kapita.iq` | Senior Market Researcher |
+| **Moamin Al-Kakaei** · مؤمن الككائي | `moamin@kapita.iq` | Senior Market Researcher |
+| **Yousif Ahmed** · يوسف أحمد | `yousif.ahmed@kapita.iq` | Market Researcher — **called "Dr. Yousif"** |
+| **Yousif Al-Shaikhli** · يوسف الشيخلي | `yousif.alshaikhali@kapita.iq` | Data Analyst & Technology Officer |
+| **Murtadha Najem** · مرتضى نجم | `murtadha.najem@kapita.iq` | Data Engineer & Market Researcher |
+| **Mohammed Mustafa** · محمد مصطفى عمران | `m.mustafa@kapita.iq` | Internal Development Consultant |
+| **Mohammed Hayder** · محمد حيدر | `m.hayder@kapita.iq` | Field Researcher |
+| **Ammar Jalel** · عمار جليل | `ammar.jalel@kapita.iq` | **Creative Lead** — has designed the firm's reports and magazines since 2023 |
+| **Aya Salam** · آية سلام | `aya.salam@kapita.iq` | Business Development Lead — **from the parent company, before the split** |
+| **Athar Hakeem** · آثار حكيم | `athar.hakeem@kapita.iq` | Project Coordinator — **began in aviation as an Airworthiness Planning Engineer** |
+| **Fatima Suhail** · فاطمة سهيل | `fatima.suhail@kapita.iq` | Marketing Executive — **an urban-planning engineer** |
+| **Ameer Loay** · أمير لؤي | `ameer.loay@kapita.iq` | **Field Operations Supervisor** — promoted through the field ladder here: Junior Research Analyst → Field Researcher → Supervisor |
+| **Assim Anas** · عاصم أنس | `assim.anas@kapita.iq` | Market Researcher |
+| **Fatimah Oday** · فاطمة عدي | `fatimah.oday@kapita.iq` | Junior Market Researcher |
+| **Mafaz Al-Kubaisi** · مفاز الكبيسي | — | **Research Intern** |
+| **Payam Sherzad** · بيام شيرزاد | — | **Political Analyst & Field Researcher** — Iraq, the KRI and Iran · multilingual |
+| **Ali Al-Saedi** · علي الساعدي | — | not published |
 
 **Two things a newcomer gets wrong, so they are stated:**
 
