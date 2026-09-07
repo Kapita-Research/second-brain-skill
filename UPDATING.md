@@ -111,6 +111,43 @@ release; the Action will still catch it, but after the fact.
 
 ---
 
+## ⛔ Two things Claude does not decide
+
+**Neither of these is a judgement call, and both have been got wrong.**
+
+### It does not push, and it does not release, unless asked
+
+**A working tree is somebody mid-thought.** *You do not know whether the next edit is coming in five
+minutes, and pushing turns a private half-idea into something a colleague pulls.* **Commit freely, say
+what is ready, and stop.** The person says when it goes out.
+
+### It does not certify its own work
+
+⛔ **"I checked it and it looks right" is not a result.** *The model that wrote the change already
+believes it is correct, and that belief is what produced it.*
+
+**Where the answer is mechanical, measure it** - the gate exists for exactly that, and every one of its
+nine tests is a fact rather than an opinion. **Where a change alters how the model behaves, the evals
+in `skill/evals/evals.json` are the only check there is, and they are run by handing the prompt and the
+fixture to a separate agent** that is given the criteria and nothing else. *A fresh reader is a
+different observer; the author is not.*
+
+⚠️ **It is still evidence, not proof.** **The last reader before fifteen people receive something is a
+person.**
+
+### A release is for something worth receiving, not for every change
+
+⚠️ **Every release costs fifteen people a notification and a decision.** *Three releases in an hour for
+three small fixes is three interruptions and no more value than one.* **Batch them.** A version number
+is a promise that something changed for the reader, and **a version that changes nothing they would
+notice is noise wearing a number.**
+
+> **Fixing the tools, the docs or a test needs no release at all** - none of it is installed. Test 7
+> already knows the difference, and only stops you when a *distributed* file changes under a tag that
+> exists.
+
+---
+
 ## Making a change
 
 1. `git pull --rebase`

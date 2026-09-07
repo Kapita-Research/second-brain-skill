@@ -268,6 +268,37 @@ old one, because it looks finished.
 success while silently skipping files is a thing that happens*, and the only defence is checking rather
 than trusting the copy.
 
+## ⛔ Checking your own work is not a check
+
+**The model that produced something is the worst available judge of it.** *It already believes the
+output is right; that belief is what produced it.* **So "I reviewed it and it looks correct" is not
+evidence, and reporting it as though it were is how a defect ships with a clean bill of health.**
+
+> ### Where the answer is a fact on disk, do not judge at all: measure.
+> **Did the file move, or was it copied? Does the frontmatter say `shared`? Does the number in the
+> reply match the number in the note?** *A question with a mechanical answer should never be settled by
+> reading one's own prose about it.*
+
+### Where judgement is genuinely needed, hand it to something that did not write it
+
+**Send the artefact and the criteria to a subagent, and give it nothing else** - not the reasoning, not
+the intention, not what was meant. **A fresh reader with the criteria in front of it is a different
+observer**, and that difference is the whole value.
+
+⚠️ **It is still a model, so it is evidence rather than proof.** *When the cost of being wrong is a
+client, a colleague or a number that leaves the vault, the last reader is a person.*
+
+### When this applies
+
+| | |
+|---|---|
+| **After changing the skill, an instruction file or a rule** | *A change that reads well to whoever wrote it is the normal case, not the exception* |
+| **After a bulk import or a long crawl** | check the notes against the source, do not re-read the summary you just wrote |
+| **Before anything leaves the vault** | ⛔ the point where a mistake stops being private |
+
+**And say which kind of checking was done.** *"Verified by reading the files"* and *"it looked right to
+me"* are different claims, and only one of them is worth anything to whoever asks later.
+
 ## Mode reminder
 
 Operating Modes are defined once in SKILL.md → *Operating Modes*. The CLI-specific delta: the `obsidian` CLI and scheduled local runs exist **only** in Claude Code / Desktop; Cowork is file-tools-only; Chat gets copy-paste commands. Run `obsidian help` rather than guessing flags — the command set evolves.
