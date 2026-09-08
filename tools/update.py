@@ -136,6 +136,14 @@ def drive_latest():
     return meta["release"], z, d
 
 
+def as_version(v):
+    """3.10.0 is newer than 3.9.0, and a string comparison says the opposite."""
+    try:
+        return tuple(int(x) for x in str(v).strip().lstrip("v").split("."))
+    except (ValueError, AttributeError):
+        return ()
+
+
 def installed_release():
     st = load_json(STATE, {}) or {}
     if st.get("release"):
@@ -364,7 +372,15 @@ def main():
             print("installed %s - the shared folder has no latest.json yet" % (have or "unknown"))
             return 0
         print("installed %s - newest release %s" % (have or "unknown", release))
-        if have and release != have:
+        # Compare versions, not strings. And "this machine is ahead" is its own answer: it happens
+        # after a renumbering, or on a machine that installed unreleased work, and reporting that as
+        # "an update is available" offers a downgrade every single day.
+        if have and as_version(release) < as_version(have):
+            print("This machine is ahead of the folder. Nothing to do.")
+            if os.path.exists(NOTICE):
+                os.remove(NOTICE)
+            return 0
+        if have and as_version(release) > as_version(have):
             os.makedirs(CLAUDE_DIR, exist_ok=True)
             with io.open(NOTICE, "w", encoding="utf-8") as fh:
                 json.dump({"release": release, "installed": have,
