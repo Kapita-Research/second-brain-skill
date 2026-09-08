@@ -50,11 +50,39 @@ python "<the shared KAPITA Second Brain folder>/install.py"
 ⛔ **It overwrites nothing that belongs to the person.** Settings are merged and backed up, the standing
 block is appended only if absent, and an existing vault is added to rather than replaced.
 
-## 2 · Then do the four things a script cannot
+## 2 · Then do the five things a script cannot
 
 **The installer ends by listing these. Do them without being asked again.**
 
-### a · The daily update routine  🔴
+### a · The one thing the owner pastes themselves  🔴
+
+**Their notes folder is almost never the folder a conversation is open in**, so without this ⛔ **every
+note asks their permission before it is written**, and the rule that says *do not ask permission to
+write a note* loses to a dialog box every time.
+
+**Tell them to open `~/.claude/settings.json`** (on Windows `C:\Users\<them>\.claude\settings.json`)
+**and merge this into whatever `permissions` block is there**, with their real folder path:
+
+```json
+"permissions": {
+  "additionalDirectories": ["<their notes folder>"],
+  "allow": [
+    "Read(<their notes folder>\**)",
+    "Write(<their notes folder>\**)",
+    "Edit(<their notes folder>\**)"
+  ]
+}
+```
+
+⛔ **Claude cannot do this one**, whichever way it is asked: **a model is not permitted to widen its own
+permissions.** *That refusal is correct and is not a bug to route around.* **It is one paste, once per
+machine, and it takes a minute.**
+
+⚠️ **Do not let them click through the prompts instead.** *Somebody who approves twenty prompts a day
+stops reading them*, and then the one that matters, the guard on their private judgements, **looks
+exactly like the other nineteen.**
+
+### b · The daily update routine  🔴
 
 **Create a scheduled task**, once a day, whose whole job is:
 
@@ -76,7 +104,7 @@ python "<the shared folder>/install.py" --check
 ⛔ **The routine never installs anything. It reports.** **A skill replaced under an open conversation is
 not re-read by it**, so the moment belongs to the person.
 
-### b · The index of installed skills  ⚪
+### c · The index of installed skills  ⚪
 
 **List `~/.claude/skills/`, read only each `SKILL.md`'s `description:` line, and write one note** — what
 each skill is for and where it lives, grouped by purpose.
@@ -84,7 +112,7 @@ each skill is for and where it lives, grouped by purpose.
 ⛔ **Pointers, never content.** *No colour token, no template, no threshold copied out.* The skill is
 maintained; a copy of it is not, and the copy is what gets read six months later when it is wrong.
 
-### c · Their own note  🔴
+### d · Their own note  🔴
 
 **`People/Me.md`** — their name and its spellings, title, employer, and the links out to their work.
 
@@ -94,7 +122,7 @@ deal with, what is on this week — **and write real notes as they answer**, thi
 > **Without it, anything written on their behalf has nothing to look up, and falls back to
 > `[your name]` in a finished draft.**
 
-### d · Obsidian  ⚪
+### e · Obsidian  ⚪
 
 **obsidian.md, then Open folder as vault.** Nothing breaks without it; several things become *asking*
 instead of *seeing*. **If they install it: Settings → General → Command line interface → Register**,

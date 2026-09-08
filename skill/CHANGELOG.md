@@ -24,7 +24,25 @@ this reaches every machine.** *Verified by adding a word and watching the gate r
 **The test for the decision, when it does come up:** *would anybody with a second brain want this word,
 or is it one person's?* **`finding` is everybody's. A gym exercise is not.**
 
-**Touched:** `SKILL.md` (Golden Rule 3, extended in place). **Gate:** eleven tests.
+**And the judgement guard stopped crying wolf.** *It matched the bare word `judgement` anywhere in a
+command*, so it fired on editing the vocabulary, on writing a changelog entry, on grepping the skill's
+own source. ⛔ **A guard that fires on prose gets clicked through, and then the one real prompt looks
+exactly like the other nineteen** - habituation kills an alarm faster than deleting it does. **It now
+matches a `Judgements/` path segment or a `type: judgement` query**, on either platform's slashes,
+verified against thirteen cases: eight that must fire and five that must not.
+
+⛔ **The cost, stated:** a vault-wide search for the word no longer prompts. *It never covered that
+properly anyway* - a search for any other word can return a line from a judgement note and always
+could. **This is a tripwire on the obvious paths, not a net.**
+
+**The install now asks the owner for one paste, and it is the one thing Claude cannot do.** *A notes
+folder is almost never the folder a conversation is open in*, so without `additionalDirectories` and
+Read, Write and Edit rules for it, **every note asks permission before it is written**, and the rule
+saying *do not ask permission to write a note* loses to a dialog box every time. ⛔ **A model is not
+permitted to widen its own permissions**, which is correct, so this is a minute of somebody's hands,
+once per machine. **The install check has a line for it.**
+
+**Touched:** `SKILL.md` (Golden Rule 3, extended in place) · `scripts/guard_judgements.py`. **Gate:** eleven tests.
 
 ---
 

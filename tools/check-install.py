@@ -257,6 +257,25 @@ def main(argv):
           "into your global CLAUDE.md between markers, and refreshes it on every update - without it "
           "the rule only applies in conversations that happen to open the vault")
 
+    # 11f - the vault in scope. Without it every note written is a permission prompt, and somebody
+    #       who approves twenty a day stops reading them.
+    try:
+        st = json.loads(read(os.path.join(CLAUDE_DIR, "settings.json")) or "{}")
+    except ValueError:
+        st = {}
+    perms = st.get("permissions", {}) or {}
+    same = lambda a, b: os.path.normcase(os.path.normpath(a)) == os.path.normcase(os.path.normpath(b))
+    scoped = any(same(d, vault) for d in perms.get("additionalDirectories", []) or [])
+    leaf = os.path.basename(vault.rstrip("\\/"))
+    writable = any(r.startswith("Write(") and leaf in r for r in perms.get("allow", []) or [])
+    check(scoped and writable, "Vault in scope, and written without asking",
+          "additionalDirectories + allow rules" if (scoped and writable) else
+          ("in scope, but no Write allow rule" if scoped else "not in scope"),
+          "put your notes folder in permissions.additionalDirectories in ~/.claude/settings.json, "
+          "with Read/Write/Edit allow rules for it. Without them every note asks permission before "
+          "it is written - and somebody who approves twenty prompts a day stops reading them, "
+          "including the one guarding their judgements. dist/CHECKLIST.md step 2a has the block",
+          required=False)
     # 12..14 - Obsidian
     app = None
     for p in (os.path.join(os.environ.get("LOCALAPPDATA", ""), "Programs", "Obsidian"),

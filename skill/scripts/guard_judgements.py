@@ -11,8 +11,15 @@ Wire it as a `PreToolUse` hook on `Read|Grep|Glob|Bash` in `~/.claude/settings.j
     {"hooks": {"PreToolUse": [{"matcher": "Read|Grep|Glob|Bash", "hooks": [{"type": "command",
       "command": "python \\"<skill>/scripts/guard_judgements.py\\"", "timeout": 5}]}]}}
 
-**What it does:** any tool call whose path, pattern or command mentions the judgements folder becomes
-a permission prompt the owner answers. Asking for a judgement deliberately costs one click. Reaching
+**What it does:** any tool call that reaches the judgements folder - a `Judgements/` path segment, or a
+`type: judgement` query - becomes a permission prompt the owner answers.
+
+⚠️ **It matches a path, not the word.** *An earlier version matched the bare word and fired on any
+command that merely mentioned judgements*, which taught the owner to click through without reading.
+**A guard that cries wolf is worse than no guard**, because the one real prompt looks like the others.
+⛔ **The cost of the narrowing, stated:** a vault-wide search for the word will no longer prompt. It
+never covered that properly anyway - a search for any *other* word can return a line from a judgement
+note and always could. **This is a tripwire on the obvious paths, not a net.** Asking for a judgement deliberately costs one click. Reaching
 for one while writing something for somebody else produces a prompt nobody expected - **and that
 surprise is the alarm.**
 
@@ -26,7 +33,17 @@ belongs to the person, not to this script.
 import json
 import sys
 
-MARKER = "judgement"
+# A path segment, or the frontmatter line. NOT the bare word: matching that fired on any command
+# that merely mentioned judgements - editing the vocabulary, writing a changelog entry, grepping the
+# skill's own source - and a guard that cries wolf gets clicked through. Habituation kills an alarm
+# faster than deleting it does.
+import re
+
+SEP = r"[/\\]"                       # a path separator, either slash, on either platform
+EDGE = r"[\s\"'`,;()]"               # what a path is wrapped in when it sits inside a command
+REACHES = re.compile(
+    r"(?:^|" + SEP + r"|" + EDGE + r")judgements(?:" + SEP + r"|" + EDGE + r"|$)"
+    r"|type:\s*judgement", re.I)
 
 # Every field across Read, Grep, Glob and Bash that could name or reach the folder.
 FIELDS = ("file_path", "path", "notebook_path", "pattern", "glob", "command")
@@ -39,9 +56,9 @@ def main():
         return 0                      # never block work because the guard could not parse
 
     ti = data.get("tool_input") or {}
-    hay = " ".join(str(ti.get(f, "")) for f in FIELDS).lower()
+    hay = " ".join(str(ti.get(f, "")) for f in FIELDS)
 
-    if MARKER not in hay:
+    if not REACHES.search(hay):
         return 0                      # no output = no opinion; every other call is untouched
 
     json.dump({"hookSpecificOutput": {
