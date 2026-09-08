@@ -2,13 +2,13 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
-## 3.2.1 — 2026-09-08
+## 3.1.1 — 2026-09-08
 
 > ### The numbering was corrected before this went out.
-> **3.1, 3.1.1, 3.2 and 3.3 moved a minor number for work that changed nothing anybody could use.**
-> *Nothing had reached a machine other than the author's*, so the history was merged into `3.1.0` and
-> `3.2.0` and the wrong tags were removed. **The criteria are in `UPDATING.md`, and the rule is that
-> the default is a patch.**
+> **Four minor numbers went out in one day for work that was one step to whoever receives it.**
+> *Nothing had reached a machine other than the author's*, so that day is now a single `3.1.0` and the
+> wrong tags were removed. **The criteria are in `UPDATING.md`, and the rule is that the default is a
+> patch.**
 
 
 **A new type or status is the owner's own by default, and giving one to everybody is a separate
@@ -53,67 +53,11 @@ once per machine. **The install check has a line for it.**
 
 ---
 
-## 3.2.0 — 2026-09-07
-
-**The four evals that had only ever been specifications were run, and one of them failed.**
-
-**Three passed on the first attempt** - a personal note refused entry to the shared folder while the
-project note beside it moved and had its `domain` changed; a research figure returned whole to a
-one-line question, with its base of 340 rather than the study's 1,200 and both of its dates; an
-ambiguous name answered by naming both readings rather than silently picking one. **All three checked
-against the files on disk rather than against the reply.**
-
-**The fourth turned out to be measuring the wrong thing, twice over.** *Its request asked for a new
-type to be created but gave nothing to record*, so the only honest output was a shape, and the model
-duly invented a status word for a thing that had not happened yet - `planned` on one run and
-`scheduled` on the next, **when `planning` and `not-started` were already in the vocabulary**. ⚠️ **Given
-one real session, the invention stopped**: the note was written, the type was right, and no new status
-appeared. **The empty case had been producing the pathology.**
-
-### 🔴 What it did find, and what fixes it
-
-**Every person involved goes in `people`, in every note, and a role field is a subset of it.** *Three
-runs recorded who was present in `attendees` and left `people` empty* - **so the session existed in the
-vault and was invisible to every search for that person, with nothing anywhere to say why.**
-
-```yaml
-people:     ["[[Sarah Chen]]", "[[Omar Haddad]]"]   # everyone, always
-trainer:    ["[[Omar Haddad]]"]                     # and which of them did what
-attendees:  ["[[Sarah Chen]]"]
-```
-
-**Golden Rule 3 carries it now, extended in place rather than renumbered.** *The same rule had been
-written into `properties-and-tags.md` an hour earlier and was read and ignored* - **a reference file is
-consulted while writing fields, not while deciding what to do.** **After the move, the next run filled
-`people` and the role fields beside it.**
-
-**And before adding a value to a controlled vocabulary, read what is in it.** ⛔ *`planned` and
-`planning` are not two states.* **Registering the new one in the vault's `CLAUDE.md` makes it legal, not
-correct** - and silences the validator, which was the one thing that would have said so.
-
-### The skill no longer names anybody
-
-⛔ **It was carrying a colleague's full name, employer and job title as a worked example**, two more
-colleagues as transliteration examples, and the maintainer's own organisation in four other places -
-**one of them added the same day, in a section about not copying things out of skills.**
-
-**Test 10 now reads the names out of the organisation layer's own roster and fails if any of them, or
-the organisation's name, appears anywhere under `skill/`.** *It follows the roster rather than a list
-kept beside it*, and it was verified by planting a leak and watching it fail.
-
-> **The examples lost nothing.** *`Hussein` / `Hussain` / `Husain` is the same three-spelling lesson*,
-> and a single common given name still shows what normalisation does and does not fix. **A first name
-> teaches it; a full name with an employer identifies somebody.**
-
-**Touched:** `SKILL.md` (Golden Rule 3, version) · `references/{properties-and-tags,capture-and-web,retrieval-and-review}.md` · `scripts/{crawl,validate_vault}.py` · `evals/evals.json` (four expectations rewritten to measure what they meant; the fork's four ids were strings while the eighteen upstream ones were integers). **Gate:** ten tests.
-
----
-
 ## 3.1.0 — 2026-09-07
 
-**Three days of work that went out as three separate releases, and the numbering was wrong.** *The
-install, the crash it exposed, and the publishing rule are one step for whoever receives them*, so they
-are one entry. **The criteria that would have said so are in `UPDATING.md` now**, written after this.
+**One day's work, and it went out as four releases.** *The install, the crash it exposed, the
+publishing rule and the evals are one step for whoever receives them*, so they are one entry. **The
+criteria that would have said so are in `UPDATING.md` now**, written after this.
 
 ### The install became one sentence
 
@@ -204,6 +148,60 @@ skills join a distribution channel at all.
 
 **Touched:** `SKILL.md` (version) · the fork's organisation layer (§2 gains the short form and says where it
 goes) · `tools/update.py` (`sync_global_block`) · `tools/check-install.py` (a line for it).
+
+### The evals were run, and one of them found something
+
+**The four evals that had only ever been specifications were run, and one of them failed.**
+
+**Three passed on the first attempt** - a personal note refused entry to the shared folder while the
+project note beside it moved and had its `domain` changed; a research figure returned whole to a
+one-line question, with its base of 340 rather than the study's 1,200 and both of its dates; an
+ambiguous name answered by naming both readings rather than silently picking one. **All three checked
+against the files on disk rather than against the reply.**
+
+**The fourth turned out to be measuring the wrong thing, twice over.** *Its request asked for a new
+type to be created but gave nothing to record*, so the only honest output was a shape, and the model
+duly invented a status word for a thing that had not happened yet - `planned` on one run and
+`scheduled` on the next, **when `planning` and `not-started` were already in the vocabulary**. ⚠️ **Given
+one real session, the invention stopped**: the note was written, the type was right, and no new status
+appeared. **The empty case had been producing the pathology.**
+
+### 🔴 What it did find, and what fixes it
+
+**Every person involved goes in `people`, in every note, and a role field is a subset of it.** *Three
+runs recorded who was present in `attendees` and left `people` empty* - **so the session existed in the
+vault and was invisible to every search for that person, with nothing anywhere to say why.**
+
+```yaml
+people:     ["[[Sarah Chen]]", "[[Omar Haddad]]"]   # everyone, always
+trainer:    ["[[Omar Haddad]]"]                     # and which of them did what
+attendees:  ["[[Sarah Chen]]"]
+```
+
+**Golden Rule 3 carries it now, extended in place rather than renumbered.** *The same rule had been
+written into `properties-and-tags.md` an hour earlier and was read and ignored* - **a reference file is
+consulted while writing fields, not while deciding what to do.** **After the move, the next run filled
+`people` and the role fields beside it.**
+
+**And before adding a value to a controlled vocabulary, read what is in it.** ⛔ *`planned` and
+`planning` are not two states.* **Registering the new one in the vault's `CLAUDE.md` makes it legal, not
+correct** - and silences the validator, which was the one thing that would have said so.
+
+### The skill no longer names anybody
+
+⛔ **It was carrying a colleague's full name, employer and job title as a worked example**, two more
+colleagues as transliteration examples, and the maintainer's own organisation in four other places -
+**one of them added the same day, in a section about not copying things out of skills.**
+
+**Test 10 now reads the names out of the organisation layer's own roster and fails if any of them, or
+the organisation's name, appears anywhere under `skill/`.** *It follows the roster rather than a list
+kept beside it*, and it was verified by planting a leak and watching it fail.
+
+> **The examples lost nothing.** *`Hussein` / `Hussain` / `Husain` is the same three-spelling lesson*,
+> and a single common given name still shows what normalisation does and does not fix. **A first name
+> teaches it; a full name with an employer identifies somebody.**
+
+**Touched:** `SKILL.md` (Golden Rule 3, version) · `references/{properties-and-tags,capture-and-web,retrieval-and-review}.md` · `scripts/{crawl,validate_vault}.py` · `evals/evals.json` (four expectations rewritten to measure what they meant; the fork's four ids were strings while the eighteen upstream ones were integers). **Gate:** ten tests.
 
 ---
 

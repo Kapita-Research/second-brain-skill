@@ -172,9 +172,9 @@ means editing two files, and the second one says in its own text that this reach
 had run yet is a patch. One sentence added to a Golden Rule that changes what gets written into every
 note is a minor.*
 
-**This was got wrong once, early.** *`3.1`, `3.1.1`, `3.2` and `3.3` went out in two days for work that
-was mostly repair*, and the history was merged back into `3.1.0` and `3.2.0` before anybody outside had
-it. **A released number is never renumbered again** - that window closed the moment somebody else
+**This was got wrong once, early.** *`3.1`, `3.1.1`, `3.2` and `3.3` went out in a single day*, for
+work that was one step to whoever received it, and the history was merged back into one `3.1.0` before
+anybody outside had it. **A released number is never renumbered again** - that window closed the moment somebody else
 installed.
 
 ### A version number is not a push
