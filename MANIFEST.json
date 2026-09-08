@@ -1,5 +1,5 @@
 {
- "release": "3.4",
+ "release": "3.2.1",
  "entries": [
   {
    "source": "skill",
@@ -88,16 +88,16 @@
   "FORK-NOTES.md": "b6f98523525c5352c25014e3453706a233ce13085ee8204b946f01e313d69825",
   "FORK-PLAN.md": "7eafafa2facac124d6df09a7cfd03bb1247d00090fbfecab58a0cc3f578869cc",
   "README.md": "39a165be64c387fd43f5abb8b0551fdfb110170c63d01d73e366f4b32b6fd099",
-  "UPDATING.md": "2c67fc2b1cc6f0d3c0f25db17c42d43fbd27610976582fa9fbfd76ca2f534845",
+  "UPDATING.md": "c43f17df525d6010906381b5f381b7613ab86c414ab07266542066300f49f905",
   "kapita-vault-KAPITA.md": "cfd35767a94e29c17aefd2a014347e793046abe3c1a42e5008e19f7015b6abdf",
   ".githooks/pre-push": "a881dcb2daa0bfd030d4b3c6132008fdca7abd90a0787acbe561145889f575b8",
   ".github/workflows/ci.yml": "50dd2bb91ceb0806b6a2bb283424290f5fe76aedb74f10b711656c4c6157f052",
   "discarded/SKILL-draft-discarded.md": "26acde0abf62c4a58edeb7427c8308e00496fb3a193f3f9085837d9877783b50",
   "dist/CHECKLIST.md": "cb8e5a98f9424839cacae67e0e4bb431837c37061f6e4a5136ed08a329ee8cd6",
   "dist/CLAUDE.md": "72b8211b9680fb0c6fe807c147d07c8215dbaaf82728756d2c2c0bb03d6eda6a",
-  "skill/CHANGELOG.md": "4da5c6fd188800064c66352470eb24ebbac0d69dd1055c845d33871cc6d57594",
+  "skill/CHANGELOG.md": "994304d39cc59140945456f5b50c1564adb9b77f08728df7b259845056695871",
   "skill/README.md": "1b9d5d391fd5a2d47236e72cb25079258983b46f5ed473b30466cbd015397be2",
-  "skill/SKILL.md": "145a7c590dc2974d62f9c1470d947f6bf7a8d4d27b59d8ab2c405e2f3df82d26",
+  "skill/SKILL.md": "66f1d581f5aabb47aa416e927a9f1a22d571f776aa5bd2a101948f348024db6c",
   "skill/assets/types.json": "2c40fdb55479f50d39526c0ac53dbd168be80a1559eef79e95b3477a604d36a8",
   "skill/assets/bases/Findings.base": "54d8d220e061a20f5e4c3f84c8760b7f21f7419d2703eaf0f2420529eda5a970",
   "skill/assets/bases/Ledger.base": "16da2bf78f5b18d528f3b63904cc8ec5e1e465a6bb00803c89c6c3b46f373bb1",

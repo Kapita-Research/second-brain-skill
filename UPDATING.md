@@ -154,6 +154,29 @@ everybody's. A gym exercise is not.**
 **The gate holds the line.** `tools/vocabulary.lock.json` pins what the skill ships, so widening it
 means editing two files, and the second one says in its own text that this reaches every machine.
 
+### Which number to move
+
+**One question decides it: what changes for the person receiving this?**
+
+| | when | the test |
+|---|---|---|
+| **`X.0.0`** | **the identity changes, or something already written stops meaning what it meant** | **does somebody using this have to relearn something, or edit their notes?** A type removed, a folder renamed, a Golden Rule renumbered |
+| **`3.X.0`** | **a capability they would notice and use** | **can you write "from now on you can ..."?** A new type, a new script they run, a rule that changes what gets written |
+| **`3.3.X`** | **a fix, a narrowing, a wording, a corrected default** | **does anybody need to know?** If the answer is *only if it broke for them*, it is a patch |
+
+> ⛔ **The default is a patch, and a minor needs the justification.** *Most work on a mature thing is
+> repair.* **A minor number says "there is something new here", and saying that when there is not
+> teaches people to ignore the number.**
+
+⚠️ **Judge what reaches the reader, not how much you wrote.** *A day spent fixing an installer nobody
+had run yet is a patch. One sentence added to a Golden Rule that changes what gets written into every
+note is a minor.*
+
+**This was got wrong once, early.** *`3.1`, `3.1.1`, `3.2` and `3.3` went out in two days for work that
+was mostly repair*, and the history was merged back into `3.1.0` and `3.2.0` before anybody outside had
+it. **A released number is never renumbered again** - that window closed the moment somebody else
+installed.
+
 ### A version number is not a push
 
 **Push as often as you like.** *Fixing a tool, a document, a test or an eval changes nothing anybody

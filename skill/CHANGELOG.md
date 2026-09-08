@@ -2,7 +2,14 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
-## 3.4 — 2026-09-08
+## 3.2.1 — 2026-09-08
+
+> ### The numbering was corrected before this went out.
+> **3.1, 3.1.1, 3.2 and 3.3 moved a minor number for work that changed nothing anybody could use.**
+> *Nothing had reached a machine other than the author's*, so the history was merged into `3.1.0` and
+> `3.2.0` and the wrong tags were removed. **The criteria are in `UPDATING.md`, and the rule is that
+> the default is a patch.**
+
 
 **A new type or status is the owner's own by default, and giving one to everybody is a separate
 decision.**
@@ -46,7 +53,7 @@ once per machine. **The install check has a line for it.**
 
 ---
 
-## 3.3 — 2026-09-07
+## 3.2.0 — 2026-09-07
 
 **The four evals that had only ever been specifications were run, and one of them failed.**
 
@@ -102,52 +109,13 @@ kept beside it*, and it was verified by planting a leak and watching it fail.
 
 ---
 
-## 3.2 — 2026-09-07
+## 3.1.0 — 2026-09-07
 
-**An organisation layer is only read when the vault is, and that is not where most writing happens.**
-*A deck built in another folder, a post drafted through somebody's own writing skill, an email written
-inside a code project* — none of them open it. ⛔ **So a rule about what may leave the vault was
-unreachable in exactly the conversations that produce the things which leave it.**
+**Three days of work that went out as three separate releases, and the numbering was wrong.** *The
+install, the crash it exposed, and the publishing rule are one step for whoever receives them*, so they
+are one entry. **The criteria that would have said so are in `UPDATING.md` now**, written after this.
 
-**A layer can now carry a short form of such a rule in a fenced block, and the updater copies it into
-`~/.claude/CLAUDE.md` between markers** — the one file read at the start of every conversation in every
-folder — **and refreshes it on every update.** Everything outside the markers is left exactly as it was.
-
-> **The layer stays the one writer.** *The copy is generated*, so editing the copy is editing something
-> that will be overwritten without a message, and the block says so.
-
-⚠️ **Measured before deciding, because the gap was bigger than it looked.** Of twelve installed skills,
-**two carry the firm's publishing rule** — and the nine that actually produce text **contain between 13
-and 30 em-dashes each in their own instructions.** *A model imitates the register of what it is reading*,
-so those files were teaching the habit by example while a rule elsewhere forbade it. **This closes the
-reachability half of that. The example half is a separate decision**, and it turns on whether those
-skills join a distribution channel at all.
-
-**Touched:** `SKILL.md` (version) · the fork's organisation layer (§2 gains the short form and says where it
-goes) · `tools/update.py` (`sync_global_block`) · `tools/check-install.py` (a line for it).
-
----
-
-## 3.1.1 — 2026-09-07
-
-**The installer crashed on a machine that had never run Claude Code.** Writing the release-state file
-is the last thing a successful install does, and it writes into `~/.claude` — **which does not exist
-yet on a machine where Claude Code has never started.** So the install did all its work, verified every
-file, and then ended in a traceback.
-
-> ### It was the empty-machine test that was not empty.
-> **Test 5 redirected the skills folder and the vault, and left `HOME` pointing at the maintainer's
-> own.** *So the one directory the installer needed was always already there.* **The test now
-> redirects `HOME` as well, and installs where a real machine would** — and it reproduces the crash
-> when the fix is removed.
-
-**Found by CI on Linux**, where a runner's home is genuinely bare — the same class of gap as the
-scaffold that only crashed off this machine, and the second time in two releases that *the receiving
-end* is where the bug lived.
-
----
-
-## 3.1 — 2026-09-07
+### The install became one sentence
 
 **One sentence installs the whole thing, and the skill now knows how it is kept current.**
 
@@ -195,6 +163,47 @@ errors, four hooks, the standing block — and a second run over the top adding 
 idempotence was not free:** the first version compared its hooks against `json.dumps()`, which escapes
 every quote the command contains, so it matched nothing and would have appended the same four hooks on
 every run.
+
+### And it crashed on the first machine that was not this one
+
+**The installer crashed on a machine that had never run Claude Code.** Writing the release-state file
+is the last thing a successful install does, and it writes into `~/.claude` — **which does not exist
+yet on a machine where Claude Code has never started.** So the install did all its work, verified every
+file, and then ended in a traceback.
+
+> ### It was the empty-machine test that was not empty.
+> **Test 5 redirected the skills folder and the vault, and left `HOME` pointing at the maintainer's
+> own.** *So the one directory the installer needed was always already there.* **The test now
+> redirects `HOME` as well, and installs where a real machine would** — and it reproduces the crash
+> when the fix is removed.
+
+**Found by CI on Linux**, where a runner's home is genuinely bare — the same class of gap as the
+scaffold that only crashed off this machine, and the second time in two releases that *the receiving
+end* is where the bug lived.
+
+### The publishing rule reached the conversations that write
+
+**An organisation layer is only read when the vault is, and that is not where most writing happens.**
+*A deck built in another folder, a post drafted through somebody's own writing skill, an email written
+inside a code project* — none of them open it. ⛔ **So a rule about what may leave the vault was
+unreachable in exactly the conversations that produce the things which leave it.**
+
+**A layer can now carry a short form of such a rule in a fenced block, and the updater copies it into
+`~/.claude/CLAUDE.md` between markers** — the one file read at the start of every conversation in every
+folder — **and refreshes it on every update.** Everything outside the markers is left exactly as it was.
+
+> **The layer stays the one writer.** *The copy is generated*, so editing the copy is editing something
+> that will be overwritten without a message, and the block says so.
+
+⚠️ **Measured before deciding, because the gap was bigger than it looked.** Of twelve installed skills,
+**two carry the firm's publishing rule** — and the nine that actually produce text **contain between 13
+and 30 em-dashes each in their own instructions.** *A model imitates the register of what it is reading*,
+so those files were teaching the habit by example while a rule elsewhere forbade it. **This closes the
+reachability half of that. The example half is a separate decision**, and it turns on whether those
+skills join a distribution channel at all.
+
+**Touched:** `SKILL.md` (version) · the fork's organisation layer (§2 gains the short form and says where it
+goes) · `tools/update.py` (`sync_global_block`) · `tools/check-install.py` (a line for it).
 
 ---
 
