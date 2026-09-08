@@ -211,6 +211,11 @@ def t_published():
     release, _archive, folder = up.drive_latest()
     if not folder:
         return True, "no shared folder on this machine - skipped"
+    if not release:
+        # The folder is there and holds no release: a maintainer who has just synced it, or a
+        # deliberate correction in progress. That is an absence of information, not a failure, and
+        # failing on it blocks the very release that would fix it.
+        return True, "the shared folder holds no release yet - skipped"
     # Released means pushed, not tagged locally. A local tag that has not left the machine is a
     # release in progress - and release.py creates the tag before it pushes, so reading local tags
     # here made the gate fail during the very release it was waiting for.

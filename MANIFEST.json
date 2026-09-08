@@ -197,7 +197,7 @@
   "tools/manifest.py": "febc94578ec010538a8e658fca47e075e3a3c3cabd419d50a499db169c02d691",
   "tools/release.py": "1957e8280156def8093b0c56602e73f5225bb209b774b9aef1e4c4501104998c",
   "tools/sync-vault.py": "9da093eb271f8f8b30eee8efc770bf3d7b08c4e3a433c371206ab17a00b1dac7",
-  "tools/test_all.py": "b39e9446da3125d8fc353928232ac2ec6eeee792a064ce6ba79296ea0e8d8d8d",
+  "tools/test_all.py": "711f4fe963692a73498dc805e3b9e2b6605b74b868ad228d33fc87e542288924",
   "tools/update.py": "fa4493d5d0dd4b085f74fd0b9a7ce6228b7a72f1fd1439e259f33f52bfd5bb04",
   "tools/vocabulary.lock.json": "ac5b4e6f7ca6b9e76dcd045e7d39875ea9eddc65508833e51cd719ac68c1b899",
   "upstream/obsidian-second-brain/CHANGELOG.md": "09f57c4133913a24f23acc6a6c53933b16b6f63f4fcc8fa641fe2749539f702f",
