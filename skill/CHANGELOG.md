@@ -2,6 +2,32 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.4 — 2026-09-08
+
+**A new type or status is the owner's own by default, and giving one to everybody is a separate
+decision.**
+
+> ### The word was right and the default was wrong.
+> **`judgement` went into the shipped vocabulary on a run where the owner had said "add a new type" and
+> meant a word in their own vault.** *They found out it had reached everybody later, by asking.* **They
+> kept it, and the point stands: nothing anywhere would have told them.**
+
+⛔ **"Add a type for my workouts" does not mean "and give it to my colleagues."** Golden Rule 3 now says
+so: a new value goes on the vault `CLAUDE.md`'s `extra-types` or `extra-statuses` line **and nowhere
+else** - that line is the owner's, it survives every update, and it reaches no other vault. **Widening
+the skill's own list is for whoever maintains the skill, and only when told to.**
+
+**And the gate holds the line rather than the sentence.** `tools/vocabulary.lock.json` pins the words
+the skill ships, so widening it means editing two files, **and the second one says in its own text that
+this reaches every machine.** *Verified by adding a word and watching the gate refuse it.*
+
+**The test for the decision, when it does come up:** *would anybody with a second brain want this word,
+or is it one person's?* **`finding` is everybody's. A gym exercise is not.**
+
+**Touched:** `SKILL.md` (Golden Rule 3, extended in place). **Gate:** eleven tests.
+
+---
+
 ## 3.3 — 2026-09-07
 
 **The four evals that had only ever been specifications were run, and one of them failed.**

@@ -305,6 +305,37 @@ def t_generic():
     return True, "clean - %d names checked across the skill" % len(names)
 
 
+@test("11 - the shared vocabulary has not widened by accident")
+def t_vocabulary():
+    """A new type or status is personal until somebody decides otherwise.
+
+    The default has to be the vault, because that is what the owner meant when they said "add a type".
+    `judgement` went into the skill on a run where the owner expected a word in their own vault, and
+    nothing anywhere would have told them. So the shipped vocabulary is pinned in
+    tools/vocabulary.lock.json: widening it means editing two files, and the second one says in its own
+    text that this reaches every machine.
+    """
+    src = io.open(os.path.join(SKILL, "scripts", "validate_vault.py"), encoding="utf-8").read()
+    types = set(re.findall(r'"([a-z-]+)"', src[src.index("TYPES = {"):src.index("# Task statuses")]))
+    i = src.index("STATUSES = {")
+    statuses = set(re.findall(r'"([a-z-]+)"', src[i:src.index("DOMAINS = {")]))
+    lock = json.load(io.open(os.path.join(HERE, "vocabulary.lock.json"), encoding="utf-8"))
+    problems = []
+    for what, now, was in (("type", types, set(lock["types"])),
+                           ("status", statuses, set(lock["statuses"]))):
+        for w in sorted(now - was):
+            problems.append("%s `%s` is new to the skill and would reach every machine. If it is one "
+                            "person's own, it belongs in their vault CLAUDE.md under extra-%ss "
+                            "instead. If it is genuinely for everybody, add it to "
+                            "tools/vocabulary.lock.json and say so in the CHANGELOG." % (what, w, what))
+        for w in sorted(was - now):
+            problems.append("%s `%s` was removed from the skill but is still in the lock file. Vaults "
+                            "already use it, so removing it breaks their notes." % (what, w))
+    if problems:
+        return False, os.linesep.join(problems)
+    return True, "%d types, %d statuses, unchanged" % (len(types), len(statuses))
+
+
 def extra_types(claude_md):
     """A vault may register its own type and status names; the validator has to be told."""
     out = []

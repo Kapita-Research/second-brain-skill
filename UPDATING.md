@@ -135,6 +135,25 @@ different observer; the author is not.*
 ⚠️ **It is still evidence, not proof.** **The last reader before fifteen people receive something is a
 person.**
 
+### A new type or status is personal until somebody says otherwise
+
+**When the owner says "add a type for X", they mean in their vault.** *It goes on their vault's
+`CLAUDE.md` under `extra-types`, where it is theirs, survives every update, and reaches nobody else.*
+
+⛔ **Adding it to the skill's own list gives it to every vault in the firm.** **That is a separate
+decision and it needs saying out loud**, because the person asking cannot see the difference from where
+they are sitting.
+
+> **This has already happened once.** *`judgement` was added to the shipped skill on a run where the
+> owner expected a word in their own vault*, and nothing anywhere would have told them. **The word was
+> a good one and it stayed. The default was still wrong.**
+
+**The test:** would anybody with a second brain want this word, or is it one person's? **`finding` is
+everybody's. A gym exercise is not.**
+
+**The gate holds the line.** `tools/vocabulary.lock.json` pins what the skill ships, so widening it
+means editing two files, and the second one says in its own text that this reaches every machine.
+
 ### A version number is not a push
 
 **Push as often as you like.** *Fixing a tool, a document, a test or an eval changes nothing anybody
