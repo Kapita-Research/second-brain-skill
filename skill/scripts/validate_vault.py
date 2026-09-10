@@ -70,8 +70,18 @@ def main():
     V = pathlib.Path(a.vault)
     if not V.is_dir():
         print(f"ERROR: not a directory: {V}"); sys.exit(1)
-    types = TYPES | {t.strip() for t in a.extra_types.split(",") if t.strip()}
-    statuses = STATUSES | {s.strip() for s in a.extra_statuses.split(",") if s.strip()}
+    # the vault registers its own words on two lines of its CLAUDE.md; read them, so a note written
+    # correctly with a registered type is not reported as an error unless someone passes a flag
+    extra = {"extra-types": a.extra_types, "extra-statuses": a.extra_statuses}
+    cm = V / "CLAUDE.md"
+    if cm.is_file():
+        ct = cm.read_text(encoding="utf-8", errors="replace")
+        for key in extra:
+            m = re.search(r"^%s:[ 	]*(.*)$" % key, ct, re.M)
+            if m and m.group(1).strip():
+                extra[key] = extra[key] + "," + m.group(1).strip()
+    types = TYPES | {t.strip() for t in extra["extra-types"].split(",") if t.strip()}
+    statuses = STATUSES | {s.strip() for s in extra["extra-statuses"].split(",") if s.strip()}
 
     notes = {}           # path -> (fm, text)
     errors, warns, info = [], [], []
@@ -107,6 +117,22 @@ def main():
         s = fm.get("status")
         if isinstance(s,str) and s and s not in statuses:
             errors.append(f"{rel}: off-vocabulary status `{s}`")
+        # a finding is a quantity of some population. These two signals were measured on a
+        # 70-finding vault before being added: each hit mostly notes that belonged elsewhere
+        # (a fact about a source, a lesson). Warnings, because a small base can be real.
+        if t == "finding":
+            b = str(fm.get("base_n", "")).replace(",", "").strip()
+            try: small = float(b) <= 1
+            except ValueError: small = True
+            if small:
+                warns.append(f"{rel}: finding with base_n `{fm.get('base_n')}` - a figure about a population needs a base; a fact about a source or a lesson?")
+            # "why" is an explanation; "how" is one too unless a quantity follows it
+            # ("how much", "how often" are measures). "whether" was tried and dropped:
+            # on a real vault it hit a correct significance test.
+            m = str(fm.get("measure", "")).strip().lower()
+            if m.startswith("why ") or (m.startswith("how ") and
+                    m.split()[1:2] not in (["much"], ["many"], ["often"], ["far"], ["large"], ["long"], ["big"])):
+                warns.append(f"{rel}: finding measure starts with '{m.split()[0]}' - an explanation, not a quantity; a source note or a lesson?")
         c = fm.get("contact")
         if isinstance(c,str) and c and c not in CONTACTS:
             errors.append(f"{rel}: off-vocabulary contact `{c}` (use active | dormant | none, or omit)")

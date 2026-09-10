@@ -2,8 +2,9 @@
 type: concept
 domain: shared
 created: {{date:YYYY-MM-DD}}
+source:             # a lesson: the project or task that taught it
 tags:
-  - topic/
+  - topic/          # a lesson: lesson/<area> as well
 ---
 # {{title}}
 

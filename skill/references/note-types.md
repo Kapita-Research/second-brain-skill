@@ -811,7 +811,13 @@ again** — it answers nothing, so nothing brings you back to it. **A claim earn
 result because someone was looking for exactly that question.**
 
 **Write the body as: what was believed, what happened, what is true now** — and **link the work that
-taught it**, because a lesson with no case behind it is an opinion.
+taught it**, because a lesson with no case behind it is an opinion. **That link goes in `source:` and
+the note carries a `lesson/` tag**, so the Overview's *Lessons* view can list them; the claim title says
+it is a lesson to a reader, and the tag says it to a filter.
+
+**An incident is recorded the same way.** *What went wrong* is the case; *what is true now* is the
+lesson. ⛔ **What is still undone after it is a task, and a decision taken because of it goes on the
+project note** (SKILL.md, *Compound captures*).
 
 ⚠️ **Nobody says *"we learned that"* at the time.** They say it by changing what they do. **So a lesson
 is almost always recovered afterwards, from a decision that reversed or a mistake that cost something**

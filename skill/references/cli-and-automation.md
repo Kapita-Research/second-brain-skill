@@ -181,23 +181,15 @@ Prompt the scheduled task runs:
 
 The skill ships `scripts/validate_vault.py` — **execute it** (don't read it into context) after bulk edits, migrations, or as part of a weekly review:
 
-🔴 **Read the vault's `CLAUDE.md` first and pass its vocabulary in** — `type` and `status` are
-checked against a fixed list, so a type the owner invented is reported as an **error** on notes that
-are perfectly correct:
-
-```bash
-# CLAUDE.md carries:  extra-types: lecture, workshop
-python3 "<skill-path>/scripts/validate_vault.py" "/path/to/vault" --extra-types "lecture,workshop"
-```
-
-⛔ **Never report those errors without checking that line.** Running bare is only right for a vault
-whose `CLAUDE.md` has neither list.
+**The validator reads the vault's own vocabulary.** `type` and `status` are checked against a fixed
+list plus the `extra-types:` and `extra-statuses:` lines of the vault's `CLAUDE.md`, so a type the owner
+registered there is accepted without anyone passing it in. The flags still work, and add to those lines.
 
 ```bash
 python3 "<skill-path>/scripts/validate_vault.py" "/path/to/vault" [--extra-types a,b] [--extra-statuses x,y]
 ```
 
-Checks: frontmatter parses (`Templates/` skipped; python3 required, PyYAML optional for stricter parsing), required `type`/`domain`/`created`, controlled `type`/`status`/`contact` values (checked against the union of all status sets, not per-type), transaction sanity (positive numeric amount, valid direction, fund link), chapter notes carry `book:`, unresolved wikilinks, orphaned knowledge notes (tasks/MOCs/dailies/transactions/funds/chapters exempt), stray `- [ ]` checkboxes outside task Steps, leftover `- [[ ]]` placeholders, and overdue tasks. Exit 1 = errors (fix before finishing); warnings are judgment calls — report them. Feed vault-specific vocabulary extensions from the vault `CLAUDE.md` via the flags.
+Checks: frontmatter parses (`Templates/` skipped; python3 required, PyYAML optional for stricter parsing), required `type`/`domain`/`created`, controlled `type`/`status`/`contact` values (checked against the union of all status sets, not per-type), transaction sanity (positive numeric amount, valid direction, fund link), chapter notes carry `book:`, unresolved wikilinks, orphaned knowledge notes (tasks/MOCs/dailies/transactions/funds/chapters exempt), stray `- [ ]` checkboxes outside task Steps, leftover `- [[ ]]` placeholders, and overdue tasks. Exit 1 = errors (fix before finishing); warnings are judgment calls — report them. Vault-specific vocabulary is read from the vault `CLAUDE.md`; the flags add to it. Two warnings on findings: a `base_n` of 1 or less, and a `measure` that starts with *why* or *how* (unless a quantity follows, as in *how many*); each usually means a fact about a source or a lesson filed as a figure.
 
 ## Deriving `last-contact` (bundled script)
 

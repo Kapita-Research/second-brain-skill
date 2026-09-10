@@ -12,7 +12,7 @@ description: >
   .base, search, web clipping, activity reporting, version history, recovering a deleted note. Do NOT use for
   general coding, or for files outside a vault.
 metadata:
-  version: "3.1.1"
+  version: "3.2.0"
   upstream_base: "obsidian-second-brain 2.17.0"
 ---
 
@@ -43,7 +43,7 @@ Almost every request maps to one stage of this cycle. Identify the stage, then a
 
 | Stage | Trigger phrases | What you do |
 |---|---|---|
-| **Capture** | "note this", "remember", "add to inbox", "action points from my meeting", **a bare URL**, or **“record that whole conversation/project”** | Write a minimal note to `Inbox/` fast. ⛔ **"Record this conversation" never means "save the transcript."** It means **record the subject** — the project it was about, its files, the people, the decisions and why, the numbers with their conditions, what was learned. **The transcript is the index to all of that, not the thing being filed**, and the things it *names* — a folder, a repo, a link, a person — **are each followed in turn.** `scripts/session.py` with no argument digests the current session from the working directory. ⛔ **And an import is not a task that finishes — it is the moment this conversation starts writing things down.** From then on, in that same session: a decision goes on the project note with its reason when it is made, a settled number becomes a `finding`, a new person gets a note, a commitment becomes a task — and **a question about the project is answered from the vault first**, because it now holds the structured version and *the conversation is the thing that will be compacted.* **The owner said it once; they will not say it again.** `capture-and-web.md` → *Record this conversation* and *Step 9*. ⛔ **A link is never read once and dropped** — follow what comes out of it, as far as the subject is worth, and stop for a reason you can name: `capture-and-web.md` → *A link is an entry point*. Any actionable to-do becomes one **task note** per item by default — Golden Rule 7. Dictated/transcribed input: resolve names against `aliases` first (`references/capture-and-web.md`). Don't over-structure yet. **Recording a whole session — a meeting, a long conversation — is different: filter it, never summarise it**; **importing one in bulk adds three rules on top** (`capture-and-web.md` → *Recording a session*, *Bulk import*). |
+| **Capture** | "note this", "remember", "add to inbox", "action points from my meeting", **a bare URL**, or **“record that whole conversation/project”** | Write a minimal note to `Inbox/` fast. ⛔ **"Record this conversation" never means "save the transcript."** It means **record the subject** — the project it was about, its files, the people, the decisions and why, the numbers with their conditions, what was learned. **The transcript is the index to all of that, not the thing being filed**, and the things it *names* — a folder, a repo, a link, a person — **are each followed in turn.** `scripts/session.py` with no argument digests the current session from the working directory. ⛔ **And an import is not a task that finishes — it is the moment this conversation starts writing things down.** From then on, in that same session: a decision goes on the project note with its reason when it is made, a settled figure about a population becomes a `finding`, a new person gets a note, a commitment becomes a task — and **a question about the project is answered from the vault first**, because it now holds the structured version and *the conversation is the thing that will be compacted.* **The owner said it once; they will not say it again.** `capture-and-web.md` → *Record this conversation* and *Step 9*. ⛔ **A link is never read once and dropped** — follow what comes out of it, as far as the subject is worth, and stop for a reason you can name: `capture-and-web.md` → *A link is an entry point*. Any actionable to-do becomes one **task note** per item by default — Golden Rule 7. Dictated/transcribed input: resolve names against `aliases` first (`references/capture-and-web.md`). Don't over-structure yet. **Recording a whole session — a meeting, a long conversation — is different: filter it, never summarise it**; **importing one in bulk adds three rules on top** (`capture-and-web.md` → *Recording a session*, *Bulk import*). |
 | **Triage** | "file this", "where does this go", "process my inbox" | Classify (work/personal + type) and move to the right folder with correct frontmatter. **See the Triage decision tree below.** |
 | **Organize** | "link this", "add to the MOC", "tag", "restructure" | Add wikilinks, attach to a MOC, apply the tag/property schema. |
 | **Distill** | "summarize", "extract the key idea", "make an atomic note" | Pull durable ideas into atomic/permanent notes; progressive summarization. **Summarise what you *produce*; filter what you *record*** — see Capture. |
@@ -106,7 +106,7 @@ These make the difference between a vault that scales and one that collapses. Fo
 
 This is the heart of the system. When filing anything, walk this top-down; stop at the first match.
 
-**Compound captures:** one utterance often contains several items — a meeting *plus* its action points *plus* a payment *plus* a new person. Decompose into items first, then route **each item** through the tree (it routes items, not messages); a single capture legitimately yields several notes of different types.
+**Compound captures:** one utterance often contains several items — a meeting *plus* its action points *plus* a payment *plus* a new person. Decompose into items first, then route **each item** through the tree (it routes items, not messages); a single capture legitimately yields several notes of different types. 🔴 **An incident, the lesson it taught, a decision taken because of it, and whatever is still undone are four items, not one note**: the lesson is a concept (branch 6), the decision goes on the note it belongs to, and **the undone part is a task (branch 2), never a sentence in a caveat.**
 
 ```
 1. Is it a half-formed capture you can't classify yet?
@@ -127,15 +127,26 @@ This is the heart of the system. When filing anything, walk this top-down; stop 
    …or a named SET of people (team, committee, volunteer cohort, client circle)?
    → People/<Group Name>.md   (type: group; roster in members:; each member points back via groups:)
 
-5. Is it a SOURCE you're taking notes on (article, paper, video, web clip, internal brief/report)?
+5. Is it a SOURCE you're taking notes on (article, paper, video, web clip, internal brief/report,
+   or a tool, API, site or dataset you have tested, for how it behaves)?
    → Resources/Sources/   (type: source)
+   A fact ABOUT a source (what it covers, a defect in it, how it counts, how it behaves) goes in
+   THAT source's note, even when it carries a number. No note for the source yet? Create it.
    …a BOOK? → Resources/Books/<Title>/<Title>.md   (type: book — one folder per book;
               chapter notes beside it: type: chapter, book: "[[Title]]")
 
 6. Is it a durable, standalone IDEA or CONCEPT (one idea, reusable)?
    → Resources/Notes/   (atomic/permanent note; link it to a MOC)
+   A LESSON or an INCIDENT is this too: the title is the claim that could be wrong, the body is
+   what was believed, what happened, what is true now; tag lesson/ and set source: to the work
+   that taught it.
 
-6b. Is it a NUMBER FROM RESEARCH (a measured figure you may quote later)?
+6b. Is it a FIGURE ABOUT A POPULATION (a quantity of some group of people, households, firms,
+    items or cases, that someone could quote to a reader)?
+    The number must BE the claim. If the note would still say something with the number removed,
+    or it describes how a document, dataset, tool, site or our own pipeline behaves, it is not a
+    finding: it is branch 5 or 6, and cites the number. A score measured on a set of cases (a
+    model on a benchmark, a test on held-out data) IS a finding: the cases are its population.
    → Findings/   (type: finding; base_n, dates and caveat REQUIRED — see references/findings.md;
                   no Findings/ module → offer to add it, or keep the figure inside the source note
                   with its base and caveat in the same sentence)
@@ -157,7 +168,14 @@ This is the heart of the system. When filing anything, walk this top-down; stop 
 
 9. Research/topic you're building knowledge in (work or personal)?
    → Resources/Research/   (hub it with a MOC in Maps/)
+
+10. Nothing above fits?
+   → Make a new type only if you can name the view, check or exclusion that will treat it
+     differently from every existing type. If what you can name is a field on an existing type,
+     add the field instead. A new type is the owner's own (Golden Rule 3).
 ```
+
+**A decision is written where it was made**, on the project or meeting note it belongs to, as `### Decision YYYY-MM-DD: <what was decided>` with the reason on the next line. One fixed heading is what makes *"what did we decide about X"* answerable by search across every project.
 
 **How to decide work vs. personal when blurry:** ask "who is this *for* / who benefits?" Work = job, clients, business, professional growth. Personal = you, family, health, hobbies, private reflection. People and Resources are **shared** folders — distinguish inside them with `domain:`. If still unclear, file to `Inbox/` and ask one quick question. Full rules, examples, and the `CLAUDE.md` you should drop in the vault root are in `references/vault-structure.md`.
 

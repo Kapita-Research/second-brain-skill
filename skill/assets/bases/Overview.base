@@ -34,6 +34,19 @@ views:
       - file.ctime
     limit: 10
   - type: table
+    name: Lessons
+    filters:
+      and:
+        - not:
+            - file.inFolder("Templates")
+            - file.inFolder("Judgements")
+        - type == "concept"
+        - file.hasTag("lesson")
+    order:
+      - file.name
+      - source
+      - file.ctime
+  - type: table
     name: Recently touched
     filters:
       and:

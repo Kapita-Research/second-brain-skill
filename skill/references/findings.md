@@ -3,6 +3,18 @@
 **For anyone who quotes figures from their own or others' research** — a researcher, an analyst, a
 journalist, a student. **Off unless the owner asks for it.**
 
+> ### What is not a finding, even with a number in it
+> **A finding is a quantity of some population that someone could quote to a reader.** *The number is
+> the claim.* **If the note would still say something with the number removed, or its subject is a
+> document, a dataset, a tool, a site or your own pipeline and says how it behaves, it is not a finding**:
+> a fact about a source
+> goes in that source's note, a lesson is a concept, and whatever is still undone is a task. *"12 of 12
+> pages loaded from Windows and 0 of 12 from Ubuntu" is a diagnosis; "41% of 812 households have no
+> piped water" is a finding, and so is *"the model scored 0.91 on 522 held-out images"*: a score on a
+> set of cases is a quantity of that set. ⚠️ **Filling the required fields does not make a note a finding.** A
+> `base_n` of 1, or a `measure` that starts with *why* or *how*, is the form being filled for a note
+> that belongs somewhere else.
+
 > **A number without its conditions is not reusable. It is a rumour with a decimal point.**
 
 A `62%` sitting in a report is a fact **only while you remember what it was 62% *of*, who it described,

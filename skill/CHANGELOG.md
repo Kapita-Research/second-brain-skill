@@ -2,6 +2,72 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.2.0 — 2026-09-10
+
+**A note's type is decided by what it promises, not by whether it has a number in it.**
+
+> ### Anything with a number became a finding.
+> **The triage asked "is it a number from research?"**, and a scraper diagnosis, a defect in a published
+> report, a platform's launch date and a change in a survey's coverage all have numbers in them. *In one
+> real vault about seven of 70 findings were none of those things*, and one of them hid an open action
+> in its caveat, where no task view would ever show it. **The required fields were filled with whatever
+> was nearest, because the template asked for them.**
+
+**The test is now the subject, and it sits in `SKILL.md` at the branch where the type is chosen.** A
+finding is a quantity of some population; **the number must be the claim.** If the note would still say
+something with the number removed, or it describes how a document, dataset, tool, site or pipeline
+behaves, it is a source note or a lesson that cites the number. **A score measured on a set of cases, a
+model on a benchmark, is a finding: the cases are its population.**
+
+- **A fact about a source goes in that source's note.** Branch 5 now names tools, APIs, sites and
+  datasets you have tested, for how they behave.
+- **A lesson or an incident is a concept** with a claim for a title, tagged `lesson/`, with `source:`
+  pointing at the work that taught it. The Concept template carries `source:`, and the Overview gains a
+  *Lessons* view.
+- **An incident, its lesson, a decision and what is still undone are four items**, not one note; the
+  undone part is a task, never a sentence in a caveat.
+- **A decision is written as `### Decision YYYY-MM-DD:`** on the note it belongs to, with its reason, so
+  *"what did we decide about X"* is one search across every project.
+- **A new type only when you can name the view, check or exclusion that will treat it differently.** If
+  what you can name is a field, it is a field. *Branch 10, the last one, where the decision is made.*
+
+**Decided by a four-seat council of agents** (precision, parsimony, retrieval, mechanism) over two
+rounds, **which found no missing type.** Every misfile traced to the one question.
+
+**The validator gains two warnings on findings**, each measured on the 70-finding vault before it was
+kept: a `base_n` of 1 or less, and a `measure` starting with *why* or *how* when no quantity follows.
+⚠️ **Four other signals were measured and dropped:** caveat phrasing hit nothing; *still* / *not yet*
+hit twelve files with one real action; `base_n` equal to `sample_n` hit eight, half of them legitimate;
+and *whether* hit a correct significance test. *A warning that fires on correct notes teaches people to
+ignore it.*
+
+🔴 **And the validator now reads the vault's own vocabulary.** `properties-and-tags.md` said the health
+check read the `extra-types:` line. **It did not**, so a type registered exactly as instructed was an
+error unless somebody passed a flag. *Two eval runs found it independently.*
+
+**Tested: eval 23, before and after, three runs each, graded from the files on disk by one script.**
+
+| | the old skill | first wording | this release |
+|---|---|---|---|
+| A tested API's behaviour lands in a source note | 0 / 3 | 3 / 3 | 3 / 3 |
+| No new type invented | 1 / 3 | 3 / 3 | 3 / 3 |
+| A model's benchmark score is not turned into something else | 3 / 3 | 0 / 3 | 3 / 3 |
+| **All nine expectations** | **22 / 27** | **24 / 27** | **27 / 27** |
+
+⚠️ **The first wording over-corrected**: "its subject is a tool" moved a model's benchmark score into a
+source note on all three runs. **It was caught only because the eval carried a control** that had to
+stay a finding. *The old skill, meanwhile, invented `benchmark` and `tool` as types on two runs of three.*
+
+⚠️ **Stated so it is not mistaken for a clean result:** the eval's first version was too easy, since
+the old skill passed the items it was built around, so a source-defect case was added before any
+after-run; and one expectation was loosened for both sides alike. **The write-time hook the council
+left open was not built**, because the triage line alone held on every run. **Not tested:** the
+*Lessons* view has not been opened in Obsidian.
+
+**Touched:** `SKILL.md` (router line, compound captures, branches 5, 6, 6b and 10, the decision heading) · `references/{findings,note-types,cli-and-automation}.md` · `assets/templates/Concept Template.md` · `assets/bases/Overview.base` · `scripts/validate_vault.py`. **Added:** eval 23 and its fixture `evals/files/typing-vault`. **Gate:** eleven tests.
+
+---
+
 ## 3.1.1 — 2026-09-08
 
 > ### The numbering was corrected before this went out.

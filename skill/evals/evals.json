@@ -322,6 +322,25 @@
         "If a question is asked, it is a single question, not a series of them",
         "Claude does not refuse to proceed or make the answer conditional on a reply"
       ]
+    },
+    {
+      "id": 23,
+      "prompt": "My vault is the provided folder typing-vault. Record today for me. The scraper for Scraper Backfill worked from my laptop and failed on the server: through the same proxies, 12 of 12 detail pages loaded from Windows and 0 of 12 from Ubuntu. Switching the client to curl_cffi impersonating Chrome made it 8 of 8 from the server, so the site blocks on the TLS handshake, not the IP. Separately, the Basra water survey is done: 41% of the 812 households we interviewed have no piped water, fieldwork ran through June 2026 and it describes 2026, and it can't be reported below district level. Our 8B routing model beat GPT-4o-mini on all 8 benchmark scenarios. I also tested the dashboard platform's API today: it takes a chart either as JSON rows that it draws itself with Highcharts, or as inline SVG we draw ourselves, and it strips style tags, so our CSS-class styling won't survive. I left two test sections on the live fisheries dashboard while testing and they need taking off. And while building the trade page I found that the statistics office's 2023 import report lists 73.6 tonnes of bulk insulin from Iran worth 566.4 million dollars, which prices it at 7,696 dollars a kilo against 21.7 from India, so that line can't be true; we're keeping chapter 30 off the cards.",
+      "expected_output": "Each item lands in the type whose promise it needs: the survey figure is a finding; the scraper diagnosis a lesson or part of a source note; the API behaviour and the insulin defect belong to notes about their sources; the leftover test sections are a task; the model comparison is not turned into a lesson; no new type is invented.",
+      "files": [
+        "evals/files/typing-vault"
+      ],
+      "expectations": [
+        "The Basra figure is a finding with base_n 812, fieldwork in June 2026, describing 2026, and the district-level caveat",
+        "The TLS diagnosis is not a finding. It is a concept whose title is a claim, or part of a source note about the site, and its body keeps the trial counts (12 of 12, 0 of 12, 8 of 8)",
+        "The API behaviour is a source note about the platform, or part of one, and not a finding",
+        "The insulin line is not a finding. It is recorded as a defect in a note about the 2023 import report (type source), with its numbers, and the decision to keep chapter 30 off the cards is recorded where the trade work is",
+        "The model comparison is not turned into a lesson or concept: it is a finding, or recorded on a project note as a result still missing its conditions",
+        "Removing the two test sections is its own task note, not a sentence inside another note",
+        "No finding has requests, proxies, pages, an API, a single website or a single line of a report as its population",
+        "No new type is created",
+        "Scraper Backfill links the note that carries the TLS diagnosis"
+      ]
     }
   ]
 }

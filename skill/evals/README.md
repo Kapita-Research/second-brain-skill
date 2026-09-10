@@ -11,6 +11,9 @@ Scenario→friction mapping (from the 2026-07-02 audit): 1 = dictated meeting �
 **Fork evals (19–22)** cover the behaviours this fork adds, which upstream's suite does not touch:
 **19** = `Outbox/` — the two refusals and the move · **20** = a finding quoted whole under a short
 question · **21** = a new type written without negotiation · **22** = an ambiguous name surfaced rather
-than silently picked. **All four share one fixture, `files/fork-vault`.** They are **regression tests for
+than silently picked. **All four share one fixture, `files/fork-vault`.** **23** = typing: one message mixing a survey
+figure, a scraper diagnosis, an API's behaviour, a model comparison and a leftover action, on
+`files/typing-vault`. It exists because anything with a number in it used to become a finding; **its
+control is the model comparison, which must stay one.** They are **regression tests for
 the diff**: if a newer upstream is ever adopted and the changes re-applied, these are what say whether
 the behaviours survived.
