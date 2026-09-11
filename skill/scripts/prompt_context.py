@@ -97,7 +97,7 @@ def matches(prompt, rows):
         if (" %s " % n) in text:
             if title not in found or len(n) > len(found[title][0]):
                 found[title] = (n, typ, status)
-    # "KAPITA" inside "KAPITA Research" names the longer thing, not both
+    # "Acme" inside "Acme Research" names the longer thing, not both
     names = [v[0] for v in found.values()]
     keep = {t: v for t, v in found.items()
             if not any(o != v[0] and (" %s " % v[0]) in (" %s " % o) for o in names)}

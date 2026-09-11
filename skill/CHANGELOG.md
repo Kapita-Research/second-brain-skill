@@ -23,7 +23,7 @@ message mentions, and a card of the owner at the start of every session.**
   when the message names notes by title or alias, lists them. *A head start, never the search*, and it
   says so every time: a nickname the note does not carry, or a name in the other script, is not in the
   list. The owner is left off it, one-word lower-case aliases (*"phone"*) are ignored, and a name
-  inside a longer matched name (*KAPITA* inside *KAPITA Research*) gives way to the longer one.
+  inside a longer matched name (*Acme* inside *Acme Research*) gives way to the longer one.
 - **`scripts/identity_card.py`**, a `SessionStart` hook, builds a short card from the owner's person
   note, **read live each session**, so a signature or a form does not open the note every time. *It
   was opened 84 times across 23 sessions.* Anything not on the card is still read from the note.
