@@ -17,6 +17,7 @@ import json
 import os
 import sys
 
+sys.dont_write_bytecode = True           # a hook runs from the installed skill; leave no cache there
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from vault_text import as_list, frontmatter, read, split_note, vault_path  # noqa: E402
 
