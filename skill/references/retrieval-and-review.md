@@ -21,6 +21,7 @@ Never load the whole vault. Climb only as far as you need:
    - **Scoped to a time?** — *"last month's meetings"*, *"what closed this week"* — **filter on `created`, `due` or the `Daily/` filenames.** Dates are exact, cheap and never ambiguous; **falling through to text search for a question that was really about a date is pure waste.**
 2. **Metadata filter** — filter by `type`, `domain`, `status`, `tags` (via a Base, or `grep` on frontmatter). Narrow to a candidate set.
 3. **Keyword search** — full-text search / `grep` for terms across the candidate set.
+   **`scripts/find.py` does rungs 1 to 4 in one call**: pass the translated and expanded terms from step 0, and it returns the few best notes with their fields and matching lines, every finding whole, and the names of everything else that matched. Reach for it before a chain of greps and reads.
 4. **Open the few** — read the handful of notes that matched, not the folder.
 5. **Synthesize** — answer from those notes; cite them as `[[wikilinks]]`.
 

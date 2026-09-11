@@ -2,6 +2,61 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.3.0 — 2026-09-11
+
+**Fewer round trips for the same answers: one search script, a per-message hook that names the notes a
+message mentions, and a card of the owner at the start of every session.**
+
+> ### What a notes skill costs is mostly round trips.
+> **An independent review measured forty real sessions on this machine.** The text the skill adds to
+> context was about 2 per cent of their tokens; **the extra calls that exist only to touch the vault
+> were about 5 per cent**, because each one re-sends the whole conversation. *On a usage-limited plan
+> with smaller contexts the same work is a larger share, projected at 8 to 25 per cent.* **So the
+> changes target calls, not wording.**
+
+- **`scripts/find.py`** searches titles, `aliases`, fields and text in one call, ranks the notes, and
+  shows the best few with their fields and the lines that matched, then names the rest and says how
+  many. ⛔ **A finding is shown whole or not at all**, and a superseded one ranks below what replaced
+  it. **A term that matched nothing is named**, so *"there is nothing in the vault"* can say which
+  words were searched. It does not translate: step 0 of the retrieval ladder still applies.
+- **`scripts/prompt_context.py` replaces the fixed per-message line.** It prints the same reminder and,
+  when the message names notes by title or alias, lists them. *A head start, never the search*, and it
+  says so every time: a nickname the note does not carry, or a name in the other script, is not in the
+  list. The owner is left off it, one-word lower-case aliases (*"phone"*) are ignored, and a name
+  inside a longer matched name (*KAPITA* inside *KAPITA Research*) gives way to the longer one.
+- **`scripts/identity_card.py`**, a `SessionStart` hook, builds a short card from the owner's person
+  note, **read live each session**, so a signature or a form does not open the note every time. *It
+  was opened 84 times across 23 sessions.* Anything not on the card is still read from the note.
+- **The validator runs once per request**, after every note is written, not after each one.
+
+⛔ **None of the three reads a judgement.** A script that walks the vault would pass the judgement guard
+unseen, because the guard only sees paths in tool calls, **so all three prune `Judgements/` and skip
+`type: judgement` before a file is opened for its body.** Gate test 12 plants one of each, names them in
+the query, and fails if either surfaces.
+
+**The updater now refreshes hooks and records the vault path**, so a machine that is updated rather than
+installed gets the new hooks, and the hooks find the vault without being told. The old fixed line is
+retired rather than left beside its replacement.
+
+**Measured, and the result is modest:**
+
+| | before | after |
+|---|---|---|
+| Messages on this machine the hook finds a note in (10,478 replayed) | | **11%**, 1.8 notes each |
+| A real Arabic question about a ruling and a figure, three runs a side: tool calls | 11 | 11 |
+| ...tokens | 114k | **105k** |
+| ...answers correct, current finding quoted whole | 3 / 3 | **3 / 3** |
+
+⚠️ **About 8 per cent fewer tokens on that question, no change in calls, no loss of accuracy.** Three
+runs a side is not enough to call it more than a direction. *The hook's value depends on how often a
+person's messages name what their vault already holds, which on this machine is about one in nine,
+because much of its traffic is building the skill itself.* **The owner card was not measured**: no eval
+writes a signature.
+
+**Touched:** `SKILL.md` (Golden Rules 1 and 2b, the checklist line on validation) · `references/{retrieval-and-review,cli-and-automation}.md` · the fork's `tools/{install,update,check-install,test_all}.py`. **Added:** `scripts/{vault_text,find,prompt_context,identity_card}.py`. **Gate:** twelve tests.
+
+---
+
 ## 3.2.0 — 2026-09-10
 
 **A note's type is decided by what it promises, not by whether it has a number in it.**

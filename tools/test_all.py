@@ -52,6 +52,69 @@ def test(name):
     return deco
 
 
+@test("12 - the search and the hooks never surface a judgement")
+def t_private():
+    """find.py and the per-message hook walk the whole vault, which the judgement guard cannot see.
+
+    The guard only sees paths in tool calls, so a script that reads every note would pass it unseen.
+    Both scripts prune `Judgements/` and skip `type: judgement` before a body is read; this plants one
+    of each, names them in the query, and fails if either appears. It also checks that the hook stays
+    quiet and harmless on the inputs a harness can send it, and that the owner card is built from the
+    live note.
+    """
+    tmp = tempfile.mkdtemp(prefix="sb-private-")
+    try:
+        v = os.path.join(tmp, "vault")
+        files = {
+            "People/Sarah Chen.md": "---\ntype: person\ndomain: personal\ncreated: 2026-01-01\naliases: [سارة]\n---\n# Sarah Chen\n",
+            "Work/Projects/Uruk Rollout.md": "---\ntype: project\ndomain: work\nstatus: active\ncreated: 2026-01-01\n---\n# Uruk Rollout\nSarah Chen leads it.\n",
+            "Judgements/Sarah Chen, a read.md": "---\ntype: judgement\ndomain: personal\ncreated: 2026-01-01\n---\nSarah Chen PLANTED-FOLDER\n",
+            "Resources/Notes/Private view of Sarah Chen.md": "---\ntype: judgement\ndomain: personal\ncreated: 2026-01-01\n---\nSarah Chen PLANTED-TYPE\n",
+            "People/Me.md": "---\ntype: person\ndomain: personal\ncreated: 2026-01-01\naliases: [Test Owner]\nemail: owner@example.org\n---\n# Me\n",
+        }
+        for rel, text in files.items():
+            fp = os.path.join(v, rel)
+            os.makedirs(os.path.dirname(fp), exist_ok=True)
+            io.open(fp, "w", encoding="utf-8").write(text)
+        home = os.path.join(tmp, "home")
+        os.makedirs(home)
+        env = {"SECOND_BRAIN_VAULT": v, "HOME": home, "USERPROFILE": home}
+        scripts = os.path.join(SKILL, "scripts")
+        problems = []
+
+        code, out = run([PY, os.path.join(scripts, "find.py"), "--vault", v, "Sarah Chen", "read", "Private view"], env=env)
+        if code != 0 or "[[Sarah Chen]]" not in out:
+            problems.append("find.py did not find the person note: " + out[:300])
+        if "PLANTED" in out or "a read" in out or "Private view of" in out:
+            problems.append("find.py surfaced a judgement")
+
+        def hook(stdin):
+            r = subprocess.run([PY, os.path.join(scripts, "prompt_context.py")], input=stdin,
+                               capture_output=True, text=True, timeout=60,
+                               env=dict(os.environ, PYTHONIOENCODING="utf-8", **env))
+            return r.returncode, r.stdout
+        code, out = hook(json.dumps({"prompt": "met Sarah Chen, a read, Private view of Sarah Chen, and سارة about Uruk Rollout"}))
+        ctx = json.loads(out)["hookSpecificOutput"]["additionalContext"] if code == 0 else ""
+        if "[[Sarah Chen]]" not in ctx or "[[Uruk Rollout]]" not in ctx:
+            problems.append("the hook missed notes the message names: " + ctx[:300])
+        if "a read" in ctx or "Private view" in ctx:
+            problems.append("the hook listed a judgement")
+        for bad in ("", "not json", json.dumps({"prompt": ""})):
+            code, out = hook(bad)
+            if code != 0 or "Second brain:" not in out:
+                problems.append("the hook did not fall back to the plain reminder on %r" % bad)
+
+        r = subprocess.run([PY, os.path.join(scripts, "identity_card.py")], capture_output=True, text=True,
+                           timeout=60, env=dict(os.environ, PYTHONIOENCODING="utf-8", **env))
+        if "owner@example.org" not in r.stdout or "Test Owner" not in r.stdout:
+            problems.append("the owner card was not built from People/Me.md: " + r.stdout[:200])
+        if problems:
+            return False, os.linesep.join(problems)
+        return True, "judgements pruned by folder and by type; hook falls back cleanly; card built"
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 @test("1 - a vault built from nothing validates clean")
 def t_fresh():
     """The receiving end. A scaffold runs once per machine, so its bugs are invisible to whoever

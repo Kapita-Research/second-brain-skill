@@ -60,9 +60,6 @@ SESSION_RULE = (
     "not only at the start. Reading one note is not searching. Do not announce either action, do not "
     "ask permission to write a note, and do ask before anything leaves the vault. The vault path and "
     "the full rules are in ~/.claude/CLAUDE.md.")
-PROMPT_RULE = (
-    "Second brain: if this turn touches a person, project, client, decision, commitment, figure or "
-    "date - search the vault before answering. If it produces one - record it. Neither is announced.")
 
 VERSION_RE = r'^\s*version:\s*"?([0-9.]+)"?'
 steps = []
@@ -158,11 +155,15 @@ def standing_block(root, vault):
 
 
 def merge_hooks(root, dry):
-    """Three hooks, merged into whatever is already there. A malformed file loses every setting in it."""
+    """The skill's hooks, merged into whatever is already there. A malformed file loses every setting in it."""
     guard = os.path.join(CLAUDE_DIR, "skills", "obsidian-second-brain", "scripts",
                          "guard_judgements.py").replace("\\", "/")
     pending = os.path.join(CLAUDE_DIR, "skills", "obsidian-second-brain", "scripts",
                            "pending_update.py").replace("\\", "/")
+    card = os.path.join(CLAUDE_DIR, "skills", "obsidian-second-brain", "scripts",
+                        "identity_card.py").replace("\\", "/")
+    prompt = os.path.join(CLAUDE_DIR, "skills", "obsidian-second-brain", "scripts",
+                          "prompt_context.py").replace("\\", "/")
 
     def echo(event, text):
         return ("echo '{\"hookSpecificOutput\": {\"hookEventName\": \"%s\", "
@@ -171,7 +172,8 @@ def merge_hooks(root, dry):
     wanted = [
         ("SessionStart", None, echo("SessionStart", SESSION_RULE)),
         ("SessionStart", None, 'python "%s"' % pending),
-        ("UserPromptSubmit", None, echo("UserPromptSubmit", PROMPT_RULE)),
+        ("SessionStart", None, 'python "%s"' % card),
+        ("UserPromptSubmit", None, 'python "%s"' % prompt),
         ("PreToolUse", "Read|Grep|Glob|Bash", 'python "%s"' % guard),
     ]
 
@@ -186,6 +188,15 @@ def merge_hooks(root, dry):
             return
     added = 0
     hooks = data.setdefault("hooks", {})
+    # The fixed per-message line became prompt_context.py, which prints the same line and adds the
+    # notes a message names. Two of them would put the reminder in every message twice.
+    ups = hooks.get("UserPromptSubmit", [])
+    kept = [g for g in ups if not any('"hookEventName": "UserPromptSubmit"' in (h.get("command") or "")
+                                      and "Second brain:" in (h.get("command") or "")
+                                      for h in g.get("hooks", []))]
+    retired = len(ups) - len(kept)
+    if retired:
+        hooks["UserPromptSubmit"] = kept
     for event, matcher, command in wanted:
         groups = hooks.setdefault(event, [])
         # Compare against the parsed commands. Searching json.dumps() instead looks right and never
@@ -201,13 +212,14 @@ def merge_hooks(root, dry):
             entry["matcher"] = matcher
         groups.append(entry)
         added += 1
-    if added and not dry:
+    if (added or retired) and not dry:
         if os.path.exists(SETTINGS):
             shutil.copyfile(SETTINGS, SETTINGS + ".bak")
         io.open(SETTINGS, "w", encoding="utf-8", newline="\n").write(
             json.dumps(data, indent=2, ensure_ascii=False) + "\n")
         json.loads(read(SETTINGS))                               # parse it back, or raise
-    say(True, "Hooks installed", "%d added, %d already there" % (added, len(wanted) - added))
+    say(True, "Hooks installed", "%d added, %d retired, %d already there"
+        % (added, retired, len(wanted) - added))
 
 
 def check_only():

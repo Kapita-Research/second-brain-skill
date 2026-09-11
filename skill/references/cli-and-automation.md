@@ -312,3 +312,30 @@ Claude and the Obsidian app can both write the same files, which risks lost edit
 - **Never run two writers on one file at once** (e.g. a script loop and the app). Finish one operation before starting the next.
 - **After bulk changes**, tell the user Obsidian may need a moment to re-index. A **Git snapshot** makes anything unexpected reversible — if the vault has version history enabled, a bulk edit is a good moment to commit first; if it doesn't, `references/version-history.md` sets it up in a few minutes.
 - **Schedule vault-writing tasks** for when you're not actively editing (e.g. an evening recap), to avoid collisions.
+
+## Searching in one call, and the two hooks that save a search
+
+**Every separate search, list and read is a round trip that re-sends the whole conversation**, and on a
+usage-limited plan those trips are most of what a notes skill costs. Three pieces cut them:
+
+```bash
+python3 "<skill-path>/scripts/find.py" "Erbil" "income factor" "دخل"     # terms are OR'd
+python3 "<skill-path>/scripts/find.py" --type finding "piped water"
+```
+
+- **`find.py`** searches titles, `aliases`, fields and text together, ranks the notes, shows the best
+  few with their fields and matching lines, **every finding whole or not at all**, then names the rest
+  and says how many. A term that matched nothing is named, so *"there is nothing in the vault"* can say
+  which words were searched. ⛔ **It never reads `Judgements/` or a `type: judgement` note**, and it
+  does not translate: the English words of an Arabic question are passed in, as step 0 of the retrieval
+  ladder says.
+- **`prompt_context.py`**, the `UserPromptSubmit` hook, prints the standing reminder and, when the
+  message names notes by their title or an alias, lists them. It is a head start, never the search: a
+  nickname the note does not carry, or a name in the other script, is not in the list.
+- **`identity_card.py`**, a `SessionStart` hook, builds a short card from the owner's person note, read
+  live at the start of each session, so a signature or a form does not open the note every time.
+
+All three find the vault through `~/.claude/second-brain-release.json`, which the updater writes, or the
+path in `~/.claude/CLAUDE.md`. **The hooks are silent or fall back to the plain reminder on any
+failure**: a hook must never be the thing that breaks a conversation.
+

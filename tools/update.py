@@ -315,9 +315,18 @@ def install(root, vault, skills_dir, run_checks):
     # a finished install into a traceback.
     os.makedirs(CLAUDE_DIR, exist_ok=True)
     with io.open(STATE, "w", encoding="utf-8") as fh:
-        json.dump({"release": release, "from": root}, fh, indent=1)
+        json.dump({"release": release, "from": root, "vault": vault or ""}, fh, indent=1)
     if os.path.exists(NOTICE):
         os.remove(NOTICE)
+
+    # Hooks change between releases too, and a machine that is updated rather than installed would
+    # keep the old ones. The installer ships beside this script, so its merge is the one used here.
+    try:
+        sys.path.insert(0, HERE)
+        import install as _install
+        _install.merge_hooks(root, False)
+    except Exception as e:                           # never the reason an update fails
+        print("  hooks not refreshed (%s) - run tools/install.py once to add them" % e)
 
     if run_checks and vault:
         for script in ("sync-vault.py", "check-install.py"):

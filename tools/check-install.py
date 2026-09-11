@@ -316,6 +316,7 @@ def main(argv):
             for ev in ("SessionStart", "UserPromptSubmit"):
                 for entry in hooks.get(ev, []):
                     if any("second brain" in (h.get("command") or "").lower()
+                           or "prompt_context.py" in (h.get("command") or "")
                            for h in entry.get("hooks", [])):
                         events.append(ev)
                         break
@@ -336,6 +337,18 @@ def main(argv):
           "judgement note into a prompt you answer. Every other protection for private opinions is "
           "an instruction a model follows; this one the harness runs, and a model cannot approve "
           "its own way past it", required=False)
+    card = False
+    if os.path.exists(st):
+        try:
+            for entry in json.loads(read(st)).get("hooks", {}).get("SessionStart", []):
+                if any("identity_card" in (h.get("command") or "") for h in entry.get("hooks", [])):
+                    card = True
+        except ValueError:
+            pass
+    check(card, "Owner card at session start", "SessionStart" if card else "",
+          "ask Claude to \"update the second brain\". A SessionStart hook that reads your own person "
+          "note and puts your name, its spellings, title and addresses in front of Claude, so it does "
+          "not open the note every time it writes something that carries them", required=False)
     check(len(events) == 2, "Standing reminder enforced by hooks",
           " + ".join(events) if events else "",
           "ask Claude: \"enforce the second brain with hooks\". Two hooks in ~/.claude/settings.json - "
