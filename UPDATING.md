@@ -107,6 +107,9 @@ release; the Action will still catch it, but after the fact.
 > behaviour and not a bug to route around. **It is one paste, once per machine.**
 
 **Specific verbs rather than `Bash(git *)`**, so a force-push or a hard reset still stops and asks.
+**If your settings already allow `Bash` bare, none of this is needed**, and what stops a force-push is a
+`deny` rule instead (`Bash(git push --force*)`, `Bash(git reset --hard*)`). ⚠️ *A deny rule matches the
+start of a command, so it stops a slip, not a command written to get past it.*
 ⚠️ **Nobody outside this repository needs any of it** - the team's update path never touches git.
 
 ---

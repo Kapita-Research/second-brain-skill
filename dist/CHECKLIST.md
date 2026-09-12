@@ -74,6 +74,10 @@ write a note* loses to a dialog box every time.
 }
 ```
 
+**Already covered if their settings allow `Write` bare** (with `Read` and `Edit`) **and a folder above
+the notes folder is in `additionalDirectories`**: a broad setup the owner wrote needs nothing added, and
+the install check reads it that way.
+
 ⛔ **Claude cannot do this one**, whichever way it is asked: **a model is not permitted to widen its own
 permissions.** *That refusal is correct and is not a bug to route around.* **It is one paste, once per
 machine, and it takes a minute.**

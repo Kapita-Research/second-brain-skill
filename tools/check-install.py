@@ -264,10 +264,14 @@ def main(argv):
     except ValueError:
         st = {}
     perms = st.get("permissions", {}) or {}
-    same = lambda a, b: os.path.normcase(os.path.normpath(a)) == os.path.normcase(os.path.normpath(b))
-    scoped = any(same(d, vault) for d in perms.get("additionalDirectories", []) or [])
+    norm = lambda p: os.path.normcase(os.path.normpath(os.path.expanduser(p)))
+    # the folder itself, or any folder above it: a whole Desktop in scope covers a vault inside it
+    scoped = any(norm(vault) == norm(d) or norm(vault).startswith(norm(d).rstrip("\\/") + os.sep)
+                 for d in perms.get("additionalDirectories", []) or [])
     leaf = os.path.basename(vault.rstrip("\\/"))
-    writable = any(r.startswith("Write(") and leaf in r for r in perms.get("allow", []) or [])
+    # a bare Write, or Write(**), allows writing anywhere in scope; a scoped rule has to name the vault
+    writable = any(r in ("Write", "Write(**)", "Write(*)") or (r.startswith("Write(") and leaf in r)
+                   for r in perms.get("allow", []) or [])
     check(scoped and writable, "Vault in scope, and written without asking",
           "additionalDirectories + allow rules" if (scoped and writable) else
           ("in scope, but no Write allow rule" if scoped else "not in scope"),
