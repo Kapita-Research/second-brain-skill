@@ -12,7 +12,7 @@ description: >
   .base, search, web clipping, activity reporting, version history, recovering a deleted note. Do NOT use for
   general coding, or for files outside a vault.
 metadata:
-  version: "3.3.0"
+  version: "3.3.1"
   upstream_base: "obsidian-second-brain 2.17.0"
 ---
 

@@ -2,6 +2,24 @@
 
 Version lives in `SKILL.md` frontmatter (`metadata.version`). Install/upgrade: open the `.skill` file in Claude → **Save skill** (replaces the same-named skill) → start a **new chat**.
 
+## 3.3.1 — 2026-09-13
+
+**The install check reads a broad permission setup as covering the notes folder.**
+
+It asked for a `Write(...)` rule naming the folder, and for the folder itself in
+`additionalDirectories`. **So an owner who allows `Write` bare, with a folder above the vault in scope,
+was told every note asks permission, which is the opposite of true.** It now accepts a bare `Write` or
+`Write(**)`, and any folder above the vault; a sibling folder with the same opening letters still does
+not count. *Checked on five settings shapes: the broad one, a parent folder only, the narrow rules, none,
+and a sibling folder.*
+
+**The install checklist and `UPDATING.md` say when their permission pastes are not needed**, and that a
+`deny` rule stops a slip, not a command written to get past it.
+
+**Touched:** the fork's `tools/check-install.py` · `dist/CHECKLIST.md` · `UPDATING.md`. Nothing under `skill/` changed but this entry and the version, which exist so the corrected check reaches machines with the next archive. **Gate:** twelve tests.
+
+---
+
 ## 3.3.0 — 2026-09-11
 
 **Fewer round trips for the same answers: one search script, a per-message hook that names the notes a
